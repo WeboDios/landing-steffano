@@ -1,0 +1,19 @@
+/* waves.css — utilidades específicas para los canvas decorativos */
+
+.hero-canvas,
+.contacto-canvas {
+  pointer-events: none;
+  user-select: none;
+}
+
+/* fallback si JS está deshabilitado */
+.no-js .hero-canvas { display: none; }
+.no-js .hero::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background:
+    radial-gradient(ellipse 80% 60% at 50% 60%, rgba(157, 92, 246, 0.25), transparent 70%),
+    radial-gradient(ellipse 50% 40% at 70% 40%, rgba(232, 121, 160, 0.18), transparent 70%);
+}
