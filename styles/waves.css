@@ -1,19 +1,53 @@
-/* waves.css — utilidades específicas para los canvas decorativos */
+/* waves.css — ambient full-page background layer */
 
-.hero-canvas,
-.contacto-canvas {
+.ambient {
+  position: fixed;
+  inset: 0;
+  z-index: -1;            /* sits behind all content */
   pointer-events: none;
   user-select: none;
+  overflow: hidden;
+  background:
+    /* very subtle base wash to deepen corners; the canvas does the heavy lifting */
+    radial-gradient(ellipse 70% 50% at 50% 0%,   rgba(157, 92, 246, 0.10), transparent 60%),
+    radial-gradient(ellipse 60% 45% at 90% 35%,  rgba(232, 121, 160, 0.06), transparent 65%),
+    radial-gradient(ellipse 80% 55% at 10% 75%,  rgba(157, 92, 246, 0.08), transparent 65%),
+    var(--bg);
 }
 
-/* fallback si JS está deshabilitado */
-.no-js .hero-canvas { display: none; }
-.no-js .hero::before {
-  content: "";
+.ambient-canvas {
   position: absolute;
   inset: 0;
-  z-index: -1;
-  background:
-    radial-gradient(ellipse 80% 60% at 50% 60%, rgba(157, 92, 246, 0.25), transparent 70%),
-    radial-gradient(ellipse 50% 40% at 70% 40%, rgba(232, 121, 160, 0.18), transparent 70%);
+  width: 100%;
+  height: 100%;
+  display: block;
 }
+
+/* faint dot-grid — quiet "audio-grid" hint, very low opacity */
+.ambient-noise {
+  position: absolute;
+  inset: 0;
+  background-image:
+    radial-gradient(rgba(216, 210, 238, 0.045) 1px, transparent 1.2px);
+  background-size: 44px 44px;
+  background-position: 0 0;
+  mix-blend-mode: screen;
+  opacity: 0.55;
+  mask-image:
+    radial-gradient(ellipse 90% 80% at 50% 50%, #000 30%, transparent 85%);
+  -webkit-mask-image:
+    radial-gradient(ellipse 90% 80% at 50% 50%, #000 30%, transparent 85%);
+}
+
+/* gentle vignette so edges sit back, content centers forward */
+.ambient-vignette {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 110% 90% at 50% 50%, transparent 55%, rgba(7, 4, 16, 0.55) 100%);
+}
+
+/* fallback if JS disabled — keep a static gradient feel */
+.no-js .ambient-canvas { display: none; }
+
+/* respect reduced motion preference — handled in waves.js (single frame) */
