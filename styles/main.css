@@ -849,3 +849,400 @@ button { font: inherit; cursor: pointer; }
   }
   html { scroll-behavior: auto; }
 }
+
+/* ─────────────────────────────
+   SKIP LINK
+   ───────────────────────────── */
+.skip-link {
+  position: absolute;
+  top: -100%;
+  left: 1rem;
+  z-index: 9999;
+  padding: 0.5rem 1.1rem;
+  background: var(--primary);
+  color: #fff;
+  font-size: 0.9rem;
+  font-weight: 500;
+  border-radius: var(--r-md);
+  transition: top 0.2s ease;
+}
+.skip-link:focus { top: 1rem; }
+
+/* ─────────────────────────────
+   FOCUS STATES — global
+   ───────────────────────────── */
+:focus-visible {
+  outline: 2px solid var(--primary-soft);
+  outline-offset: 3px;
+  border-radius: var(--r-sm);
+}
+
+/* ─────────────────────────────
+   NAV — active section indicator
+   ───────────────────────────── */
+.nav-links a.is-active {
+  color: var(--ink-100);
+}
+.nav-links a.is-active::after {
+  width: 100%;
+  background: var(--primary);
+}
+
+/* ─────────────────────────────
+   HERO STAT — context line
+   ───────────────────────────── */
+.hero-stat-context {
+  font-size: 0.7rem;
+  color: var(--ink-40);
+  line-height: 1.35;
+  margin-top: 0.1rem;
+  max-width: 22ch;
+  text-wrap: pretty;
+}
+
+/* ─────────────────────────────
+   PROYECTOS — override + expand
+   ───────────────────────────── */
+
+/* Reset the original list-item grid so the toggle handles layout */
+.project-row {
+  display: block;
+  padding: 0;
+  cursor: default;
+  overflow: hidden;
+  background: transparent;
+  transition: background 0.25s ease;
+  border-bottom: 1px solid var(--line);
+}
+.project-row:hover {
+  background: transparent;
+  padding-left: 0;
+}
+
+.project-toggle {
+  display: grid;
+  grid-template-columns: 28px 1fr auto;
+  align-items: center;
+  gap: 1.5rem;
+  padding: 1.75rem 0.5rem;
+  width: 100%;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  text-align: left;
+  color: inherit;
+  transition: background 0.25s ease, padding-left 0.25s ease;
+}
+.project-toggle:hover {
+  background: linear-gradient(90deg, rgba(157, 92, 246, 0.06), transparent 70%);
+  padding-left: 1rem;
+}
+.project-row.is-open > .project-toggle {
+  background: linear-gradient(90deg, rgba(157, 92, 246, 0.08), transparent 70%);
+  padding-left: 1rem;
+}
+
+.project-meta-row {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+  margin-top: 0.3rem;
+}
+
+.project-tool-pill {
+  display: inline-block;
+  padding: 0.15rem 0.55rem;
+  background: rgba(157, 92, 246, 0.12);
+  border: 1px solid rgba(157, 92, 246, 0.28);
+  border-radius: 999px;
+  font-size: 0.7rem;
+  color: var(--primary-soft);
+  letter-spacing: 0.04em;
+  font-weight: 500;
+}
+.project-row:nth-child(2) .project-tool-pill {
+  background: rgba(232, 121, 160, 0.10);
+  border-color: rgba(232, 121, 160, 0.28);
+  color: var(--accent-soft);
+}
+
+.project-actions {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-shrink: 0;
+}
+
+.project-expand-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--line-strong);
+  color: var(--ink-60);
+  flex-shrink: 0;
+  transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1),
+              background 0.25s ease,
+              border-color 0.25s ease,
+              color 0.25s ease;
+}
+.project-toggle:hover .project-expand-icon {
+  background: rgba(157, 92, 246, 0.14);
+  border-color: rgba(157, 92, 246, 0.35);
+  color: var(--primary-soft);
+}
+.project-row.is-open .project-expand-icon {
+  transform: rotate(180deg);
+  background: rgba(157, 92, 246, 0.18);
+  border-color: rgba(157, 92, 246, 0.4);
+  color: var(--primary-soft);
+}
+
+/* Detail panel — max-height accordion */
+.project-detail {
+  max-height: 0;
+  overflow: hidden;
+  padding: 0 0.5rem 0 2.5rem;
+  transition: max-height 0.45s cubic-bezier(0.4, 0, 0.2, 1),
+              padding-bottom 0.35s ease;
+}
+.project-detail.is-open {
+  max-height: 700px;
+  padding-bottom: 1.75rem;
+}
+
+.project-detail-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.25rem;
+  padding: 1.5rem;
+  background: rgba(255, 255, 255, 0.025);
+  border: 1px solid var(--line);
+  border-radius: var(--r-lg);
+  margin-bottom: 1.1rem;
+}
+@media (max-width: 760px) {
+  .project-detail-grid { grid-template-columns: 1fr; gap: 1rem; }
+}
+
+.project-detail-block {
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+}
+
+.project-detail-label {
+  font-size: 0.66rem;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  color: var(--primary-soft);
+  font-weight: 600;
+}
+.project-row:nth-child(2) .project-detail-label { color: var(--accent-soft); }
+
+.project-detail-text {
+  font-size: 0.88rem;
+  color: var(--ink-80);
+  line-height: 1.65;
+  text-wrap: pretty;
+}
+
+.project-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  font-size: 0.88rem;
+  color: var(--primary-soft);
+  font-weight: 500;
+  padding-bottom: 2px;
+  border-bottom: 1px solid rgba(157, 92, 246, 0.3);
+  transition: color 0.2s ease, border-color 0.2s ease, gap 0.2s ease;
+}
+.project-cta:hover {
+  color: var(--primary);
+  border-color: var(--primary);
+  gap: 0.65rem;
+}
+
+@media (max-width: 560px) {
+  .project-toggle {
+    grid-template-columns: 18px 1fr auto;
+    gap: 0.75rem;
+  }
+  .project-actions .project-meta { display: none; }
+  .project-detail { padding-left: 1rem; }
+}
+
+/* Bridge between projects and contact */
+.projects-bridge {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.85rem;
+  flex-wrap: wrap;
+  padding: 2.5rem 0 0;
+  text-align: center;
+}
+.bridge-text {
+  font-size: 0.95rem;
+  color: var(--ink-60);
+}
+.bridge-link {
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: var(--primary-soft);
+  padding-bottom: 1px;
+  border-bottom: 1px solid rgba(157, 92, 246, 0.3);
+  transition: color 0.2s ease, border-color 0.2s ease;
+}
+.bridge-link:hover {
+  color: var(--primary);
+  border-color: var(--primary);
+}
+
+/* Tighten proyectos bottom padding to close gap before contact */
+.proyectos { padding-bottom: clamp(3rem, 6vw, 4.5rem); }
+
+/* ─────────────────────────────
+   CONTACTO — form + badge
+   ───────────────────────────── */
+.contact-sub {
+  margin-top: 1rem;
+  font-size: 1.05rem;
+  color: var(--ink-80);
+  max-width: 50ch;
+  text-wrap: pretty;
+}
+
+.contact-response-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.4rem 0.9rem;
+  margin-top: 1.5rem;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  font-size: 0.78rem;
+  color: var(--ink-80);
+  letter-spacing: 0.02em;
+}
+.response-pulse {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #4ade80;
+  box-shadow: 0 0 10px rgba(74, 222, 128, 0.65);
+  flex-shrink: 0;
+  animation: pulse 2.4s ease-in-out infinite;
+}
+
+.contact-form {
+  width: 100%;
+  max-width: 580px;
+  margin-top: 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.contact-form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.8rem;
+}
+@media (max-width: 560px) {
+  .contact-form-grid { grid-template-columns: 1fr; }
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+}
+.form-group--full { grid-column: 1 / -1; }
+
+.form-group label {
+  font-size: 0.78rem;
+  color: var(--ink-60);
+  letter-spacing: 0.04em;
+  font-weight: 500;
+}
+.label-optional {
+  color: var(--ink-40);
+  font-weight: 400;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--line-strong);
+  border-radius: var(--r-md);
+  padding: 0.7rem 0.9rem;
+  font-family: var(--sans);
+  font-size: 0.9rem;
+  color: var(--ink-100);
+  width: 100%;
+  -webkit-appearance: none;
+  appearance: none;
+  transition: border-color 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
+}
+.form-group select {
+  background-image: url("data:image/svg+xml,%3Csvg width='12' height='8' viewBox='0 0 12 8' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%236b6489' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0.9rem center;
+  padding-right: 2.5rem;
+  cursor: pointer;
+}
+.form-group textarea {
+  resize: vertical;
+  min-height: 88px;
+  line-height: 1.55;
+}
+.form-group input::placeholder,
+.form-group textarea::placeholder { color: var(--ink-40); }
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+  outline: none;
+  border-color: rgba(157, 92, 246, 0.55);
+  background: rgba(255, 255, 255, 0.06);
+  box-shadow: 0 0 0 3px rgba(157, 92, 246, 0.12);
+}
+.form-group select option {
+  background: var(--bg-elev);
+  color: var(--ink-100);
+}
+
+.contact-form-footer {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+  margin-top: 0.25rem;
+}
+.contact-submit { flex-shrink: 0; }
+
+.contact-alt {
+  font-size: 0.85rem;
+  color: var(--ink-60);
+}
+.contact-email-link {
+  color: var(--primary-soft);
+  padding-bottom: 1px;
+  border-bottom: 1px solid rgba(157, 92, 246, 0.3);
+  transition: color 0.2s ease, border-color 0.2s ease;
+}
+.contact-email-link:hover {
+  color: var(--primary);
+  border-color: var(--primary);
+}
+
+/* Tighten contact top padding to match */
+.contacto { padding-top: clamp(4rem, 8vw, 6rem); }

@@ -17,41 +17,47 @@
 </head>
 <body>
 
+  <a href="#main-content" class="skip-link">Saltar al contenido principal</a>
+
   <!-- ── NAV ── -->
-  <header class="nav" id="nav">
-    <a href="#inicio" class="nav-logo">
+  <header class="nav" id="nav" role="banner">
+    <a href="#inicio" class="nav-logo" aria-label="Steffano Millones — volver al inicio">
       <span class="nav-logo-mark" aria-hidden="true"></span>
       <span class="nav-logo-text">Steffano Millones</span>
     </a>
     <nav class="nav-links" aria-label="Navegación principal">
-      <a href="#servicios">Servicios</a>
-      <a href="#proceso">Proceso</a>
-      <a href="#proyectos">Proyectos</a>
+      <a href="#servicios" data-nav="servicios">Servicios</a>
+      <a href="#proceso"   data-nav="proceso">Proceso</a>
+      <a href="#proyectos" data-nav="proyectos">Proyectos</a>
+      <a href="#contacto"  data-nav="contacto">Contacto</a>
     </nav>
     <a
       href="https://wa.me/51992551735?text=Hola%20Steffano%2C%20me%20interesa%20conversar%20sobre%20soluciones%20digitales%20para%20mi%20empresa."
       class="nav-cta"
       target="_blank"
       rel="noopener noreferrer"
-    >Conversemos</a>
+      aria-label="Contactar por WhatsApp"
+    >Contáctanos</a>
   </header>
 
+  <main id="main-content">
+
   <!-- ── HERO ── -->
-  <section class="hero" id="inicio">
+  <section class="hero" id="inicio" aria-labelledby="hero-heading">
     <canvas class="hero-canvas" id="wavesCanvas" aria-hidden="true"></canvas>
     <div class="hero-grain" aria-hidden="true"></div>
     <div class="hero-content">
       <p class="hero-eyebrow">
         <span class="eyebrow-dot" aria-hidden="true"></span>
-        Consultor digital · Perú &amp; LATAM
+        Consultora digital · Perú &amp; LATAM
       </p>
-      <h1 class="hero-title">
+      <h1 class="hero-title" id="hero-heading">
         Menos trabajo manual.<br>
         <em>Más decisiones con datos.</em>
       </h1>
       <p class="hero-sub">
-        Ayudo a empresas y MYPEs a automatizar operaciones,
-        visualizar información y escalar con inteligencia artificial.
+         Ayudamos a empresas, MYPEs y profesionales a dejar de operar en modo manual.<br>
+         Desde dashboards ejecutivos hasta agentes personales con IA.
       </p>
       <div class="hero-ctas">
         <a
@@ -59,24 +65,28 @@
           class="btn-primary"
           target="_blank"
           rel="noopener noreferrer"
+          aria-label="Escribir a Steffano por WhatsApp"
         >
           Escribir por WhatsApp
           <span class="btn-arrow" aria-hidden="true">→</span>
         </a>
         <a href="#servicios" class="btn-secondary">Ver servicios</a>
       </div>
-      <div class="hero-stats" role="list">
+      <div class="hero-stats" role="list" aria-label="Indicadores clave">
         <div class="hero-stat" role="listitem">
           <span class="hero-stat-num">+10</span>
-          <span class="hero-stat-label">Proyectos entregados</span>
+          <span class="hero-stat-label">Proyectos en producción</span>
+          <span class="hero-stat-context">Funcionando para clientes reales</span>
         </div>
         <div class="hero-stat" role="listitem">
-          <span class="hero-stat-num">LATAM</span>
-          <span class="hero-stat-label">Clientes en la región</span>
+          <span class="hero-stat-num">&lt;24h</span>
+          <span class="hero-stat-label">Tiempo de respuesta</span>
+          <span class="hero-stat-context">De Lunes a Sábado, sin excepción</span>
         </div>
         <div class="hero-stat" role="listitem">
-          <span class="hero-stat-num">3</span>
-          <span class="hero-stat-label">Áreas de especialidad</span>
+          <span class="hero-stat-num" style="white-space: nowrap;">n8n · IA · HTML</span>
+          <span class="hero-stat-label">Stack especializado</span>
+          <span class="hero-stat-context">Sin código que el cliente deba mantener</span>
         </div>
       </div>
     </div>
@@ -87,49 +97,49 @@
   </section>
 
   <!-- ── SERVICIOS ── -->
-  <section class="servicios" id="servicios">
+  <section class="servicios" id="servicios" aria-labelledby="servicios-heading">
     <div class="container">
       <header class="section-head">
         <span class="section-label">
           <span class="section-label-mark" aria-hidden="true"></span>
-          Lo que hago
+          Lo que hacemos
         </span>
-        <h2 class="section-title">¿En qué te puedo ayudar?</h2>
+        <h2 class="section-title" id="servicios-heading">¿En qué te podemos ayudar?</h2>
         <p class="section-sub">Tres soluciones concretas para que tu empresa opere mejor.</p>
       </header>
 
       <div class="cards-grid">
 
         <article class="card card--primary">
-          <span class="card-index">01</span>
+          <span class="card-index" aria-hidden="true">01</span>
           <h3 class="card-title">Dashboards ejecutivos</h3>
           <p class="card-desc">Convierte datos dispersos en paneles claros para hacer seguimiento de ventas, operación, clientes o finanzas.</p>
           <div class="card-divider" aria-hidden="true"></div>
           <p class="card-tag">
             <span class="card-tag-label">Ideal para</span>
-            empresas que necesitan ver indicadores, avances y alertas en un solo lugar.
+            Empresas o profesionales que necesiten ver indicadores, avances y alertas en un solo lugar.
           </p>
         </article>
 
         <article class="card card--accent">
-          <span class="card-index">02</span>
+          <span class="card-index" aria-hidden="true">02</span>
           <h3 class="card-title">Automatización de procesos</h3>
           <p class="card-desc">Elimina tareas repetitivas conectando formularios, reportes, alertas, correos, bases de datos y flujos internos.</p>
           <div class="card-divider" aria-hidden="true"></div>
           <p class="card-tag">
             <span class="card-tag-label">Ideal para</span>
-            equipos que pierden tiempo copiando, enviando o actualizando información manualmente.
+            Equipos o profesionales que pierden tiempo copiando, enviando o actualizando información manualmente.
           </p>
         </article>
 
         <article class="card card--primary">
-          <span class="card-index">03</span>
+          <span class="card-index" aria-hidden="true">03</span>
           <h3 class="card-title">Agentes IA para operación</h3>
           <p class="card-desc">Crea asistentes internos que responden consultas, ordenan información y apoyan tareas del equipo en tiempo real.</p>
           <div class="card-divider" aria-hidden="true"></div>
           <p class="card-tag">
             <span class="card-tag-label">Ideal para</span>
-            negocios que quieren usar IA para atender, analizar o ejecutar tareas operativas.
+            Negocios o profesionales que quieren usar IA para atender, analizar o ejecutar tareas operativas.
           </p>
         </article>
 
@@ -138,7 +148,7 @@
   </section>
 
   <!-- ── CÓMO FUNCIONA ── -->
-  <section class="proceso" id="proceso">
+  <section class="proceso" id="proceso" aria-labelledby="proceso-heading">
     <div class="proceso-glow" aria-hidden="true"></div>
     <div class="container proceso-content">
       <header class="section-head">
@@ -146,38 +156,38 @@
           <span class="section-label-mark" aria-hidden="true"></span>
           El proceso
         </span>
-        <h2 class="section-title">Un proceso claro, de inicio a fin.</h2>
+        <h2 class="section-title" id="proceso-heading">Un proceso claro, de inicio a fin.</h2>
         <p class="section-sub">Seis pasos para llegar de donde estás a donde quieres estar.</p>
       </header>
 
-      <ol class="steps-grid">
+      <ol class="steps-grid" aria-label="Pasos del proceso de consultoría">
         <li class="step">
-          <p class="step-num">01</p>
+          <p class="step-num" aria-hidden="true">01</p>
           <p class="step-name">Diagnóstico</p>
           <p class="step-desc">Entendemos el negocio, los datos y los objetivos.</p>
         </li>
         <li class="step">
-          <p class="step-num">02</p>
+          <p class="step-num" aria-hidden="true">02</p>
           <p class="step-name">Propuesta</p>
           <p class="step-desc">Definimos alcance, enfoque y ruta de trabajo.</p>
         </li>
         <li class="step">
-          <p class="step-num">03</p>
+          <p class="step-num" aria-hidden="true">03</p>
           <p class="step-name">Diseño</p>
           <p class="step-desc">Aterrizamos métricas, estructura y visuales.</p>
         </li>
         <li class="step">
-          <p class="step-num">04</p>
+          <p class="step-num" aria-hidden="true">04</p>
           <p class="step-name">Desarrollo</p>
           <p class="step-desc">Construimos un dashboard útil con tus datos.</p>
         </li>
         <li class="step">
-          <p class="step-num">05</p>
+          <p class="step-num" aria-hidden="true">05</p>
           <p class="step-name">Validación</p>
           <p class="step-desc">Revisamos resultados y ajustamos contigo.</p>
         </li>
         <li class="step">
-          <p class="step-num">06</p>
+          <p class="step-num" aria-hidden="true">06</p>
           <p class="step-name">Entrega</p>
           <p class="step-desc">Capacitamos, publicamos y dejamos todo listo para usar.</p>
         </li>
@@ -186,58 +196,174 @@
   </section>
 
   <!-- ── PROYECTOS ── -->
-  <section class="proyectos" id="proyectos">
+  <section class="proyectos" id="proyectos" aria-labelledby="proyectos-heading">
     <div class="container">
       <header class="section-head">
         <span class="section-label">
           <span class="section-label-mark" aria-hidden="true"></span>
           Casos reales
         </span>
-        <h2 class="section-title">Resultados concretos.</h2>
-        <p class="section-sub">Proyectos que ya funcionan para clientes reales.</p>
+        <h2 class="section-title" id="proyectos-heading">Resultados concretos.</h2>
+        <p class="section-sub">Proyectos que ya funcionan para clientes reales. Expande cada caso para ver el detalle.</p>
       </header>
 
-      <ul class="projects-list">
+      <ul class="projects-list" role="list">
 
-        <li class="project-row">
-          <span class="project-marker" aria-hidden="true">
-            <span class="project-marker-line"></span>
-          </span>
-          <div class="project-info">
-            <p class="project-title">De Excel aburrido a dashboard profesional</p>
-            <p class="project-type">Dashboards ejecutivos</p>
+        <!-- Caso 01 -->
+        <li class="project-row" id="project-1">
+          <button
+            class="project-toggle"
+            aria-expanded="false"
+            aria-controls="project-detail-1"
+          >
+            <span class="project-marker" aria-hidden="true">
+              <span class="project-marker-line"></span>
+            </span>
+            <div class="project-info">
+              <p class="project-title">De un Excel confuso a dashboard profesional</p>
+              <div class="project-meta-row">
+                <span class="project-type">Dashboards ejecutivos</span>
+                <span class="project-tool-pill">HTML + JS - A medida</span>
+              </div>
+            </div>
+            <div class="project-actions">
+              <span class="project-meta" aria-hidden="true">Caso 01</span>
+              <span class="project-expand-icon" aria-hidden="true">
+                <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+                  <path d="M3 5l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </span>
+            </div>
+          </button>
+          <div class="project-detail" id="project-detail-1" aria-hidden="true">
+            <div class="project-detail-grid">
+              <div class="project-detail-block">
+                <p class="project-detail-label">Problema</p>
+                <p class="project-detail-text">Reportes fragmentados en múltiples archivos Excel, sin vista unificada, sin filtros y con gráficas que no representan bien la realidad del negocio.</p>
+              </div>
+              <div class="project-detail-block">
+                <p class="project-detail-label">Solución</p>
+                <p class="project-detail-text">Dashboard en HTML desarrollado con código, completamente personalizado: gráficas simétricas, paleta de marca, métricas exactas que el cliente necesita ver y acceso desde cualquier dispositivo.</p>
+              </div>
+              <div class="project-detail-block">
+                <p class="project-detail-label">Resultado</p>
+                <p class="project-detail-text">El equipo directivo accede a sus indicadores clave en tiempo real, con visualizaciones limpias y alineadas a su identidad, sin depender de herramientas de terceros ni de licencias.</p>
+              </div>
+            </div>
+            <a href="#contacto" class="project-cta">
+              ¿Tus datos merecen mejor presentación? Conversemos
+              <span aria-hidden="true">→</span>
+            </a>
           </div>
-          <span class="project-meta" aria-hidden="true">Caso 01</span>
         </li>
 
-        <li class="project-row">
-          <span class="project-marker" aria-hidden="true">
-            <span class="project-marker-line"></span>
-          </span>
-          <div class="project-info">
-            <p class="project-title">De proceso manual a flujo automatizado en n8n</p>
-            <p class="project-type">Automatización de procesos</p>
+        <!-- Caso 02 -->
+        <li class="project-row" id="project-2">
+          <button
+            class="project-toggle"
+            aria-expanded="false"
+            aria-controls="project-detail-2"
+          >
+            <span class="project-marker" aria-hidden="true">
+              <span class="project-marker-line"></span>
+            </span>
+            <div class="project-info">
+              <p class="project-title">De proceso manual a flujo automatizado en n8n</p>
+              <div class="project-meta-row">
+                <span class="project-type">Automatización de procesos</span>
+                <span class="project-tool-pill">n8n</span>
+              </div>
+            </div>
+            <div class="project-actions">
+              <span class="project-meta" aria-hidden="true">Caso 02</span>
+              <span class="project-expand-icon" aria-hidden="true">
+                <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+                  <path d="M3 5l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </span>
+            </div>
+          </button>
+          <div class="project-detail" id="project-detail-2" aria-hidden="true">
+            <div class="project-detail-grid">
+              <div class="project-detail-block">
+                <p class="project-detail-label">Problema</p>
+                <p class="project-detail-text">El equipo dedicaba horas cada semana a copiar información entre formularios, hojas de cálculo y correos, generando errores y demoras en la operación.</p>
+              </div>
+              <div class="project-detail-block">
+                <p class="project-detail-label">Solución</p>
+                <p class="project-detail-text">Flujo automatizado en n8n que conecta los formularios de entrada, bases de datos y alertas por correo o WhatsApp — sin intervención manual en ningún paso.</p>
+              </div>
+              <div class="project-detail-block">
+                <p class="project-detail-label">Resultado</p>
+                <p class="project-detail-text">El proceso que tomaba horas ocurre ahora en segundos. El equipo redirigió ese tiempo a tareas de mayor valor y los errores por copia manual desaparecieron.</p>
+              </div>
+            </div>
+            <a href="#contacto" class="project-cta">
+              ¿Tu equipo pierde tiempo en tareas repetitivas? Conversemos
+              <span aria-hidden="true">→</span>
+            </a>
           </div>
-          <span class="project-meta" aria-hidden="true">Caso 02</span>
         </li>
 
-        <li class="project-row">
-          <span class="project-marker" aria-hidden="true">
-            <span class="project-marker-line"></span>
-          </span>
-          <div class="project-info">
-            <p class="project-title">Agente IA que organiza reuniones y eventos</p>
-            <p class="project-type">Agentes IA para operación</p>
+        <!-- Caso 03 -->
+        <li class="project-row" id="project-3">
+          <button
+            class="project-toggle"
+            aria-expanded="false"
+            aria-controls="project-detail-3"
+          >
+            <span class="project-marker" aria-hidden="true">
+              <span class="project-marker-line"></span>
+            </span>
+            <div class="project-info">
+              <p class="project-title">Asistente que nunca descansa y nunca ollvida</p>
+              <div class="project-meta-row">
+                <span class="project-type">Agentes IA para operación</span>
+                <span class="project-tool-pill">AI Agent</span>
+              </div>
+            </div>
+            <div class="project-actions">
+              <span class="project-meta" aria-hidden="true">Caso 03</span>
+              <span class="project-expand-icon" aria-hidden="true">
+                <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+                  <path d="M3 5l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </span>
+            </div>
+          </button>
+          <div class="project-detail" id="project-detail-3" aria-hidden="true">
+            <div class="project-detail-grid">
+              <div class="project-detail-block">
+                <p class="project-detail-label">Problema</p>
+                <p class="project-detail-text">Coordinar reuniones, hacer seguimiento de contactos y recordar compromisos consume tiempo y atención que debería estar enfocado en el negocio. Un error humano y se pierde una reunión clave.</p>
+              </div>
+              <div class="project-detail-block">
+                <p class="project-detail-label">Solución</p>
+                <p class="project-detail-text">Agente IA que agenda reuniones automáticamente, centraliza contactos desde correos y envía recordatorios personalizados a la hora que tu definas.</p>
+              </div>
+              <div class="project-detail-block">
+                <p class="project-detail-label">Resultado</p>
+                <p class="project-detail-text">Cero reuniones perdidas. Base de contactos siempre actualizada. Tiempo liberado sin contratar personal, con un asistente disponible 24/7 que trabaja exactamente como tú lo necesitas.</p>
+              </div>
+            </div>
+            <a href="#contacto" class="project-cta">
+              ¿Cuánto tiempo pierdes coordinando reuniones? Conversemos
+              <span aria-hidden="true">→</span>
+            </a>
           </div>
-          <span class="project-meta" aria-hidden="true">Caso 03</span>
         </li>
 
       </ul>
+
+      <div class="projects-bridge">
+        <p class="bridge-text">¿Tu empresa tiene un reto parecido?</p>
+        <a href="#contacto" class="bridge-link">Cuéntamelo →</a>
+      </div>
     </div>
   </section>
 
   <!-- ── CONTACTO ── -->
-  <section class="contacto" id="contacto">
+  <section class="contacto" id="contacto" aria-labelledby="contacto-heading">
     <canvas class="contacto-canvas" id="contactoCanvas" aria-hidden="true"></canvas>
     <div class="contacto-glow" aria-hidden="true"></div>
     <div class="container contacto-content">
@@ -245,33 +371,88 @@
         <span class="section-label-mark" aria-hidden="true"></span>
         Contacto
       </span>
-      <h2 class="section-title section-title--center">¿Hablamos?</h2>
-      <p class="contact-sub">Cuéntame tu situación y te digo cómo puedo ayudarte.</p>
-      <div class="contact-btns">
-        <a
-          href="https://wa.me/51992551735?text=Hola%20Steffano%2C%20me%20interesa%20conversar%20sobre%20soluciones%20digitales%20para%20mi%20empresa."
-          class="btn-whatsapp"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <span class="btn-whatsapp-label">WhatsApp</span>
-          <span class="btn-whatsapp-num">+51 992 551 735</span>
-        </a>
-        <a href="mailto:steffanomillones@gmail.com" class="btn-email">
-          steffanomillones@gmail.com
-        </a>
+      <h2 class="section-title section-title--center" id="contacto-heading">¿Contáctanos?</h2>
+      <p class="contact-sub">Cuéntanos qué problema tienes y nosotros te ayudamos a resolverlo.</p>
+
+      <div class="contact-response-badge" aria-label="Disponibilidad: respuesta en menos de 24 horas, lunes a sábado">
+        <span class="response-pulse" aria-hidden="true"></span>
+        Respondemos en menos de 24 h · Lunes a sábado
       </div>
+
+      <form
+        class="contact-form"
+        id="contact-form"
+        novalidate
+        aria-label="Formulario de contacto rápido — se enviará por WhatsApp"
+      >
+        <div class="contact-form-grid">
+
+          <div class="form-group">
+            <label for="cf-name">Tu nombre</label>
+            <input
+              type="text"
+              id="cf-name"
+              name="name"
+              placeholder="Juan García"
+              autocomplete="name"
+            >
+          </div>
+
+          <div class="form-group">
+            <label for="cf-service">¿Qué necesitas?</label>
+            <select id="cf-service" name="service">
+              <option value="">Selecciona una opción</option>
+              <option value="dashboard">Dashboard ejecutivo</option>
+              <option value="automation">Automatización de procesos</option>
+              <option value="ai-agent">Agente IA</option>
+              <option value="other">Tengo una consulta / No sé aún</option>
+            </select>
+          </div>
+
+          <div class="form-group form-group--full">
+            <label for="cf-message">
+              Cuéntanos el reto
+              <span class="label-optional">(opcional)</span>
+            </label>
+            <textarea
+              id="cf-message"
+              name="message"
+              rows="3"
+              placeholder="Ej: Tenemos datos en varias hojas de Excel y necesitamos un panel para el equipo comercial…"
+            ></textarea>
+          </div>
+
+        </div>
+        <div class="contact-form-footer">
+          <button
+            type="submit"
+            class="btn-primary contact-submit"
+            aria-label="Enviar consulta — se abrirá WhatsApp con el mensaje"
+          >
+            Enviar por WhatsApp
+            <span class="btn-arrow" aria-hidden="true">→</span>
+          </button>
+          <p class="contact-alt">
+            O escribenos directamente a:
+            <a href="mailto:steffanomillones@gmail.com" class="contact-email-link">
+              steffanomillones@gmail.com
+            </a>
+          </p>
+        </div>
+      </form>
     </div>
   </section>
 
+  </main>
+
   <!-- ── FOOTER ── -->
-  <footer class="footer">
+  <footer class="footer" role="contentinfo">
     <div class="container footer-inner">
       <div class="footer-brand">
         <span class="nav-logo-mark" aria-hidden="true"></span>
         <span>Steffano Millones</span>
       </div>
-      <p class="footer-meta">© 2026 · Consultor digital · Perú</p>
+      <p class="footer-meta">© 2026 · Consultora digital · Perú</p>
     </div>
   </footer>
 
