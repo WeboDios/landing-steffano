@@ -3,10 +3,10 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Steffano Millones — Consultor Digital</title>
+  <title>FLUIA — Consultora Digital</title>
   <meta name="description" content="Dashboards ejecutivos, automatizaciones con n8n y agentes de IA para empresas y MYPEs en Perú y LATAM.">
-  <meta property="og:title" content="Steffano Millones — Consultor Digital">
-  <meta property="og:description" content="Ayudo a empresas y MYPEs a automatizar operaciones, visualizar información y escalar con inteligencia artificial.">
+  <meta property="og:title" content="FLUIA — Consultora Digital">
+  <meta property="og:description" content="Ayudamos a empresas y MYPEs a automatizar operaciones, visualizar información y escalar con inteligencia artificial.">
   <meta property="og:url" content="https://landing-steffano.vercel.app">
   <meta property="og:type" content="website">
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -19,11 +19,18 @@
 
   <a href="#main-content" class="skip-link">Saltar al contenido principal</a>
 
+  <!-- ── AMBIENT BACKGROUND (continuous, page-wide) ── -->
+  <div class="ambient" aria-hidden="true">
+    <canvas class="ambient-canvas" id="ambientCanvas"></canvas>
+    <div class="ambient-noise"></div>
+    <div class="ambient-vignette"></div>
+  </div>
+
   <!-- ── NAV ── -->
   <header class="nav" id="nav" role="banner">
-    <a href="#inicio" class="nav-logo" aria-label="Steffano Millones — volver al inicio">
+    <a href="#inicio" class="nav-logo" aria-label="FLUIA — volver al inicio">
       <span class="nav-logo-mark" aria-hidden="true"></span>
-      <span class="nav-logo-text">Steffano Millones</span>
+      <span class="nav-logo-text">FLUIA</span>
     </a>
     <nav class="nav-links" aria-label="Navegación principal">
       <a href="#servicios" data-nav="servicios">Servicios</a>
@@ -32,7 +39,7 @@
       <a href="#contacto"  data-nav="contacto">Contacto</a>
     </nav>
     <a
-      href="https://wa.me/51992551735?text=Hola%20Steffano%2C%20me%20interesa%20conversar%20sobre%20soluciones%20digitales%20para%20mi%20empresa."
+      href="https://wa.me/51992551735?text=Hola%20FLUIA%2C%20me%20interesa%20conversar%20sobre%20soluciones%20digitales%20para%20mi%20empresa."
       class="nav-cta"
       target="_blank"
       rel="noopener noreferrer"
@@ -44,8 +51,6 @@
 
   <!-- ── HERO ── -->
   <section class="hero" id="inicio" aria-labelledby="hero-heading">
-    <canvas class="hero-canvas" id="wavesCanvas" aria-hidden="true"></canvas>
-    <div class="hero-grain" aria-hidden="true"></div>
     <div class="hero-content">
       <p class="hero-eyebrow">
         <span class="eyebrow-dot" aria-hidden="true"></span>
@@ -61,11 +66,11 @@
       </p>
       <div class="hero-ctas">
         <a
-          href="https://wa.me/51992551735?text=Hola%20Steffano%2C%20me%20interesa%20conversar%20sobre%20soluciones%20digitales%20para%20mi%20empresa."
+          href="https://wa.me/51992551735?text=Hola%20FLUIA%2C%20me%20interesa%20conversar%20sobre%20soluciones%20digitales%20para%20mi%20empresa."
           class="btn-primary"
           target="_blank"
           rel="noopener noreferrer"
-          aria-label="Escribir a Steffano por WhatsApp"
+          aria-label="Escribir a FLUIA por WhatsApp"
         >
           Escribir por WhatsApp
           <span class="btn-arrow" aria-hidden="true">→</span>
@@ -149,7 +154,6 @@
 
   <!-- ── CÓMO FUNCIONA ── -->
   <section class="proceso" id="proceso" aria-labelledby="proceso-heading">
-    <div class="proceso-glow" aria-hidden="true"></div>
     <div class="container proceso-content">
       <header class="section-head">
         <span class="section-label">
@@ -204,7 +208,7 @@
           Casos reales
         </span>
         <h2 class="section-title" id="proyectos-heading">Resultados concretos.</h2>
-        <p class="section-sub">Proyectos que ya funcionan para clientes reales. Expande cada caso para ver el detalle.</p>
+        <p class="section-sub">Proyectos que ya funcionan para clientes reales. Toca cualquier caso para ver el detalle.</p>
       </header>
 
       <ul class="projects-list" role="list">
@@ -216,44 +220,39 @@
             aria-expanded="false"
             aria-controls="project-detail-1"
           >
-            <span class="project-marker" aria-hidden="true">
-              <span class="project-marker-line"></span>
-            </span>
+            <span class="project-number" aria-hidden="true">01</span>
             <div class="project-info">
+              <span class="project-eyebrow">Dashboards ejecutivos</span>
               <p class="project-title">De un Excel confuso a dashboard profesional</p>
-              <div class="project-meta-row">
-                <span class="project-type">Dashboards ejecutivos</span>
-                <span class="project-tool-pill">HTML + JS - A medida</span>
-              </div>
+              <span class="project-tool-pill">HTML + JS · A medida</span>
             </div>
-            <div class="project-actions">
-              <span class="project-meta" aria-hidden="true">Caso 01</span>
-              <span class="project-expand-icon" aria-hidden="true">
-                <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
-                  <path d="M3 5l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                </svg>
-              </span>
-            </div>
+            <span class="project-expand-icon" aria-hidden="true">
+              <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+                <path d="M3 5l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </span>
           </button>
           <div class="project-detail" id="project-detail-1" aria-hidden="true">
-            <div class="project-detail-grid">
-              <div class="project-detail-block">
-                <p class="project-detail-label">Problema</p>
-                <p class="project-detail-text">Reportes fragmentados en múltiples archivos Excel, sin vista unificada, sin filtros y con gráficas que no representan bien la realidad del negocio.</p>
+            <div class="project-detail-inner">
+              <div class="project-detail-grid">
+                <div class="project-detail-block">
+                  <p class="project-detail-label">Problema</p>
+                  <p class="project-detail-text">Reportes fragmentados en múltiples archivos Excel, sin vista unificada, sin filtros y con gráficas que no representan bien la realidad del negocio.</p>
+                </div>
+                <div class="project-detail-block">
+                  <p class="project-detail-label">Solución</p>
+                  <p class="project-detail-text">Dashboard en HTML desarrollado con código, completamente personalizado: gráficas simétricas, paleta de marca, métricas exactas que el cliente necesita ver y acceso desde cualquier dispositivo.</p>
+                </div>
               </div>
-              <div class="project-detail-block">
-                <p class="project-detail-label">Solución</p>
-                <p class="project-detail-text">Dashboard en HTML desarrollado con código, completamente personalizado: gráficas simétricas, paleta de marca, métricas exactas que el cliente necesita ver y acceso desde cualquier dispositivo.</p>
+              <div class="project-result">
+                <p class="project-result-label">Resultado</p>
+                <p class="project-result-text">El equipo directivo accede a sus indicadores clave en tiempo real, con visualizaciones limpias y alineadas a su identidad, sin depender de herramientas de terceros ni de licencias.</p>
               </div>
-              <div class="project-detail-block">
-                <p class="project-detail-label">Resultado</p>
-                <p class="project-detail-text">El equipo directivo accede a sus indicadores clave en tiempo real, con visualizaciones limpias y alineadas a su identidad, sin depender de herramientas de terceros ni de licencias.</p>
-              </div>
+              <a href="#contacto" class="project-cta-btn">
+                ¿Tus datos merecen mejor presentación? Conversemos
+                <span aria-hidden="true">→</span>
+              </a>
             </div>
-            <a href="#contacto" class="project-cta">
-              ¿Tus datos merecen mejor presentación? Conversemos
-              <span aria-hidden="true">→</span>
-            </a>
           </div>
         </li>
 
@@ -264,44 +263,39 @@
             aria-expanded="false"
             aria-controls="project-detail-2"
           >
-            <span class="project-marker" aria-hidden="true">
-              <span class="project-marker-line"></span>
-            </span>
+            <span class="project-number" aria-hidden="true">02</span>
             <div class="project-info">
+              <span class="project-eyebrow">Automatización de procesos</span>
               <p class="project-title">De proceso manual a flujo automatizado en n8n</p>
-              <div class="project-meta-row">
-                <span class="project-type">Automatización de procesos</span>
-                <span class="project-tool-pill">n8n</span>
-              </div>
+              <span class="project-tool-pill">n8n</span>
             </div>
-            <div class="project-actions">
-              <span class="project-meta" aria-hidden="true">Caso 02</span>
-              <span class="project-expand-icon" aria-hidden="true">
-                <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
-                  <path d="M3 5l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                </svg>
-              </span>
-            </div>
+            <span class="project-expand-icon" aria-hidden="true">
+              <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+                <path d="M3 5l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </span>
           </button>
           <div class="project-detail" id="project-detail-2" aria-hidden="true">
-            <div class="project-detail-grid">
-              <div class="project-detail-block">
-                <p class="project-detail-label">Problema</p>
-                <p class="project-detail-text">El equipo dedicaba horas cada semana a copiar información entre formularios, hojas de cálculo y correos, generando errores y demoras en la operación.</p>
+            <div class="project-detail-inner">
+              <div class="project-detail-grid">
+                <div class="project-detail-block">
+                  <p class="project-detail-label">Problema</p>
+                  <p class="project-detail-text">El equipo dedicaba horas cada semana a copiar información entre formularios, hojas de cálculo y correos, generando errores y demoras en la operación.</p>
+                </div>
+                <div class="project-detail-block">
+                  <p class="project-detail-label">Solución</p>
+                  <p class="project-detail-text">Flujo automatizado en n8n que conecta los formularios de entrada, bases de datos y alertas por correo o WhatsApp — sin intervención manual en ningún paso.</p>
+                </div>
               </div>
-              <div class="project-detail-block">
-                <p class="project-detail-label">Solución</p>
-                <p class="project-detail-text">Flujo automatizado en n8n que conecta los formularios de entrada, bases de datos y alertas por correo o WhatsApp — sin intervención manual en ningún paso.</p>
+              <div class="project-result">
+                <p class="project-result-label">Resultado</p>
+                <p class="project-result-text">El proceso que tomaba horas ocurre ahora en segundos. El equipo redirigió ese tiempo a tareas de mayor valor y los errores por copia manual desaparecieron.</p>
               </div>
-              <div class="project-detail-block">
-                <p class="project-detail-label">Resultado</p>
-                <p class="project-detail-text">El proceso que tomaba horas ocurre ahora en segundos. El equipo redirigió ese tiempo a tareas de mayor valor y los errores por copia manual desaparecieron.</p>
-              </div>
+              <a href="#contacto" class="project-cta-btn">
+                ¿Tu equipo pierde tiempo en tareas repetitivas? Conversemos
+                <span aria-hidden="true">→</span>
+              </a>
             </div>
-            <a href="#contacto" class="project-cta">
-              ¿Tu equipo pierde tiempo en tareas repetitivas? Conversemos
-              <span aria-hidden="true">→</span>
-            </a>
           </div>
         </li>
 
@@ -312,44 +306,39 @@
             aria-expanded="false"
             aria-controls="project-detail-3"
           >
-            <span class="project-marker" aria-hidden="true">
-              <span class="project-marker-line"></span>
-            </span>
+            <span class="project-number" aria-hidden="true">03</span>
             <div class="project-info">
-              <p class="project-title">Asistente que nunca descansa y nunca ollvida</p>
-              <div class="project-meta-row">
-                <span class="project-type">Agentes IA para operación</span>
-                <span class="project-tool-pill">AI Agent</span>
-              </div>
+              <span class="project-eyebrow">Agentes IA para operación</span>
+              <p class="project-title">Asistente que nunca descansa y nunca olvida</p>
+              <span class="project-tool-pill">AI Agent</span>
             </div>
-            <div class="project-actions">
-              <span class="project-meta" aria-hidden="true">Caso 03</span>
-              <span class="project-expand-icon" aria-hidden="true">
-                <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
-                  <path d="M3 5l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                </svg>
-              </span>
-            </div>
+            <span class="project-expand-icon" aria-hidden="true">
+              <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+                <path d="M3 5l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </span>
           </button>
           <div class="project-detail" id="project-detail-3" aria-hidden="true">
-            <div class="project-detail-grid">
-              <div class="project-detail-block">
-                <p class="project-detail-label">Problema</p>
-                <p class="project-detail-text">Coordinar reuniones, hacer seguimiento de contactos y recordar compromisos consume tiempo y atención que debería estar enfocado en el negocio. Un error humano y se pierde una reunión clave.</p>
+            <div class="project-detail-inner">
+              <div class="project-detail-grid">
+                <div class="project-detail-block">
+                  <p class="project-detail-label">Problema</p>
+                  <p class="project-detail-text">Coordinar reuniones, hacer seguimiento de contactos y recordar compromisos consume tiempo y atención que debería estar enfocado en el negocio. Un error humano y se pierde una reunión clave.</p>
+                </div>
+                <div class="project-detail-block">
+                  <p class="project-detail-label">Solución</p>
+                  <p class="project-detail-text">Agente IA que agenda reuniones automáticamente, centraliza contactos desde correos y envía recordatorios personalizados a la hora que tu definas.</p>
+                </div>
               </div>
-              <div class="project-detail-block">
-                <p class="project-detail-label">Solución</p>
-                <p class="project-detail-text">Agente IA que agenda reuniones automáticamente, centraliza contactos desde correos y envía recordatorios personalizados a la hora que tu definas.</p>
+              <div class="project-result">
+                <p class="project-result-label">Resultado</p>
+                <p class="project-result-text">Cero reuniones perdidas. Base de contactos siempre actualizada. Tiempo liberado sin contratar personal, con un asistente disponible 24/7 que trabaja exactamente como tú lo necesitas.</p>
               </div>
-              <div class="project-detail-block">
-                <p class="project-detail-label">Resultado</p>
-                <p class="project-detail-text">Cero reuniones perdidas. Base de contactos siempre actualizada. Tiempo liberado sin contratar personal, con un asistente disponible 24/7 que trabaja exactamente como tú lo necesitas.</p>
-              </div>
+              <a href="#contacto" class="project-cta-btn">
+                ¿Cuánto tiempo pierdes coordinando reuniones? Conversemos
+                <span aria-hidden="true">→</span>
+              </a>
             </div>
-            <a href="#contacto" class="project-cta">
-              ¿Cuánto tiempo pierdes coordinando reuniones? Conversemos
-              <span aria-hidden="true">→</span>
-            </a>
           </div>
         </li>
 
@@ -357,21 +346,19 @@
 
       <div class="projects-bridge">
         <p class="bridge-text">¿Tu empresa tiene un reto parecido?</p>
-        <a href="#contacto" class="bridge-link">Cuéntamelo →</a>
+        <a href="#contacto" class="bridge-link">Cuéntanos →</a>
       </div>
     </div>
   </section>
 
   <!-- ── CONTACTO ── -->
   <section class="contacto" id="contacto" aria-labelledby="contacto-heading">
-    <canvas class="contacto-canvas" id="contactoCanvas" aria-hidden="true"></canvas>
-    <div class="contacto-glow" aria-hidden="true"></div>
     <div class="container contacto-content">
       <span class="section-label section-label--center">
         <span class="section-label-mark" aria-hidden="true"></span>
         Contacto
       </span>
-      <h2 class="section-title section-title--center" id="contacto-heading">¿Contáctanos?</h2>
+      <h2 class="section-title section-title--center" id="contacto-heading">Contáctanos</h2>
       <p class="contact-sub">Cuéntanos qué problema tienes y nosotros te ayudamos a resolverlo.</p>
 
       <div class="contact-response-badge" aria-label="Disponibilidad: respuesta en menos de 24 horas, lunes a sábado">
@@ -450,7 +437,7 @@
     <div class="container footer-inner">
       <div class="footer-brand">
         <span class="nav-logo-mark" aria-hidden="true"></span>
-        <span>Steffano Millones</span>
+        <span>FLUIA</span>
       </div>
       <p class="footer-meta">© 2026 · Consultora digital · Perú</p>
     </div>

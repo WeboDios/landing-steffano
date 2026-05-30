@@ -119,8 +119,8 @@
       const message = (contactForm.querySelector('#cf-message')?.value || '').trim();
 
       let text = name
-        ? `Hola Steffano, soy ${name}`
-        : 'Hola Steffano';
+        ? `Hola FLUIA, soy ${name}`
+        : 'Hola FLUIA';
 
       if (service && serviceLabels[service]) {
         text += ` y me interesa: ${serviceLabels[service]}`;
