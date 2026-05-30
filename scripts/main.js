@@ -106,21 +106,5 @@
     });
   }
 
-  // ── Conmutador de estilo (herramienta de vista previa) ──
-  const switcher = document.getElementById('themeSwitch');
-  if (switcher) {
-    const dots = switcher.querySelectorAll('.theme-dot');
-    const STORAGE = 'steffano-theme';
-    const apply = (val, persist) => {
-      document.documentElement.setAttribute('data-theme', val);
-      dots.forEach(d => d.classList.toggle('is-active', d.dataset.themeVal === val));
-      document.dispatchEvent(new CustomEvent('themechange', { detail: val }));
-      if (persist) { try { localStorage.setItem(STORAGE, val); } catch (e) {} }
-    };
-    let saved = 'amatista';
-    try { saved = localStorage.getItem(STORAGE) || 'amatista'; } catch (e) {}
-    apply(saved, false);
-    dots.forEach(d => d.addEventListener('click', () => apply(d.dataset.themeVal, true)));
-  }
 
 })();
