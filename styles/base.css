@@ -140,15 +140,11 @@ ul, ol { list-style: none; }
   color: var(--ink-100);
 }
 .nav-logo-mark {
-  width: 22px; height: 22px; border-radius: 7px;
-  background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
-  box-shadow: 0 0 0 1px rgba(255,255,255,0.08), 0 8px 24px -8px var(--primary-glow);
-  position: relative;
-  transition: transform 0.25s ease, filter 0.25s ease;
-}
-.nav-logo-mark::after {
-  content: ""; position: absolute; inset: 4px; border-radius: 3px;
-  background: var(--bg); opacity: 0.5;
+  width: 30px; height: 30px;
+  background: url("../assets/fluia-mark.png") center / contain no-repeat;
+  filter: drop-shadow(0 4px 16px var(--primary-glow));
+  flex-shrink: 0;
+  transition: filter 0.3s ease, transform 0.4s ease;
 }
 .nav-logo:hover .nav-logo-mark {
   filter: drop-shadow(0 6px 24px var(--primary-glow));
