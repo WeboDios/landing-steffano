@@ -1,0 +1,284 @@
+---
+// Canvas tipo n8n para el hero de Automatización.
+// Cuenta el flujo de captura de leads: Formulario/Webhook → n8n valida y
+// enruta → se ramifica a Sheets, CRM, Gmail y WhatsApp. Un "paquete" de datos
+// recorre los conectores en bucle y cada nodo se ilumina al recibirlo.
+// Autónomo (no depende del scroll). Respeta prefers-reduced-motion.
+// Íconos: glifos monocromos teñidos en la paleta FLUIA.
+
+// id único por instancia (por si hay más de uno en la misma página).
+const uid = 'flw-' + Math.random().toString(36).slice(2, 8);
+
+// Nodos del flujo. x/y/w/h en coordenadas del viewBox (472 × 548).
+const nodes = [
+  { id: 'trigger',  kind: 'trigger', x: 14,  y: 246, w: 150, h: 62, icon: 'form',     title: 'Formulario', sub: 'Nuevo lead' },
+  { id: 'hub',      kind: 'hub',     x: 204, y: 240, w: 124, h: 74, icon: 'n8n',      title: 'n8n',        sub: 'Valida y enruta' },
+  { id: 'sheets',   kind: 'out',     x: 348, y: 70,  w: 120, h: 50, icon: 'sheets',   title: 'Sheets',     sub: 'Guarda la fila' },
+  { id: 'crm',      kind: 'out',     x: 348, y: 196, w: 120, h: 50, icon: 'crm',      title: 'CRM',        sub: 'Crea contacto' },
+  { id: 'gmail',    kind: 'out',     x: 348, y: 322, w: 120, h: 50, icon: 'gmail',    title: 'Gmail',      sub: 'Correo auto' },
+  { id: 'whatsapp', kind: 'out',     x: 348, y: 448, w: 120, h: 50, icon: 'whatsapp', title: 'WhatsApp',   sub: 'Avisa al equipo' },
+];
+
+// Conectores: trigger→hub y hub→cada salida (curvas que se abren en abanico).
+const conns = [
+  { id: 'trig',     d: 'M164 277 L204 277' },
+  { id: 'sheets',   d: 'M328 277 C342 277 338 95 348 95' },
+  { id: 'crm',      d: 'M328 277 C344 277 340 221 348 221' },
+  { id: 'gmail',    d: 'M328 277 C344 277 340 347 348 347' },
+  { id: 'whatsapp', d: 'M328 277 C342 277 338 473 348 473' },
+];
+
+// Glifos monocromos (currentColor → los tiñe el CSS).
+const icons = {
+  form:     `<rect x="4" y="3" width="16" height="18" rx="3" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M8 8h8M8 12h8M8 16h5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>`,
+  n8n:      `<circle cx="6" cy="12" r="2.3" fill="none" stroke="currentColor" stroke-width="1.5"/><circle cx="12" cy="6.5" r="2.3" fill="none" stroke="currentColor" stroke-width="1.5"/><circle cx="12" cy="17.5" r="2.3" fill="none" stroke="currentColor" stroke-width="1.5"/><circle cx="18" cy="12" r="2.3" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M7.8 10.8 10.3 8M7.8 13.2 10.3 16M13.7 8 16.2 10.8M13.7 16 16.2 13.2" stroke="currentColor" stroke-width="1.4"/>`,
+  sheets:   `<rect x="5" y="3" width="14" height="18" rx="2.5" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M5 9h14M5 15h14M12 9v12" stroke="currentColor" stroke-width="1.4"/>`,
+  crm:      `<rect x="3" y="5" width="18" height="14" rx="2.5" fill="none" stroke="currentColor" stroke-width="1.6"/><circle cx="9" cy="11" r="2" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M6 16c0-1.7 1.4-3 3-3s3 1.3 3 3M15 10h3M15 13.5h3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>`,
+  gmail:    `<rect x="3" y="5" width="18" height="14" rx="2.5" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="m4.5 7.5 7.5 5.5 7.5-5.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>`,
+  whatsapp: `<path d="M4.5 19.5 5.8 16A7.2 7.2 0 1 1 8.4 18.6L4.5 19.5Z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M9.3 8.8c.3 0 .5.2.7.6l.5 1.2c.1.3 0 .5-.1.7l-.4.4c-.1.2-.1.3 0 .5.5.9 1.2 1.5 2.1 1.9.2.1.4.1.5 0l.5-.5c.2-.2.4-.2.6-.1l1.2.6c.3.1.4.3.4.6 0 .8-.7 1.4-1.5 1.4-2.6-.1-5.3-2.8-5.4-5.4 0-.8.6-1.4 1.4-1.4Z" fill="currentColor"/>`,
+};
+---
+
+<figure class="flw" data-flw role="img"
+  aria-label="Flujo de automatización: un formulario captura un lead, n8n lo valida y lo distribuye a Google Sheets, el CRM, un correo de Gmail y una alerta de WhatsApp.">
+  <header class="flw-bar" aria-hidden="true">
+    <span class="flw-bar-ico">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none">
+        <path d="M13 2 4 14h6l-1 8 9-12h-6l1-8Z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/>
+      </svg>
+    </span>
+    <span class="flw-bar-titles">
+      <span class="flw-bar-name">Captura de leads</span>
+      <span class="flw-bar-status"><span class="flw-bar-dot"></span>Flujo activo · corriendo solo</span>
+    </span>
+    <span class="flw-bar-tag">n8n</span>
+  </header>
+
+  <div class="flw-canvas">
+    <svg viewBox="0 0 472 548" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
+      <defs>
+        <pattern id={`${uid}-dots`} width="22" height="22" patternUnits="userSpaceOnUse">
+          <circle cx="1.6" cy="1.6" r="1.1" fill="rgba(255,255,255,0.05)" />
+        </pattern>
+      </defs>
+      <rect x="0" y="0" width="472" height="548" fill={`url(#${uid}-dots)`} />
+
+      {/* Conectores */}
+      {conns.map((c) => (
+        <path class="flw-conn" data-conn={c.id} d={c.d} />
+      ))}
+
+      {/* Paquetes de datos que viajan por los conectores */}
+      <circle class="flw-pkt" data-pkt="main" r="4.6" />
+      <circle class="flw-pkt flw-pkt--branch" data-pkt="sheets" r="4" />
+      <circle class="flw-pkt flw-pkt--branch" data-pkt="crm" r="4" />
+      <circle class="flw-pkt flw-pkt--branch" data-pkt="gmail" r="4" />
+      <circle class="flw-pkt flw-pkt--branch" data-pkt="whatsapp" r="4" />
+
+      {/* Nodos */}
+      {nodes.map((n) => (
+        <g transform={`translate(${n.x} ${n.y})`}>
+          <g class={`flw-node flw-node--${n.kind}`} data-node={n.id}>
+            <rect class="flw-glow" data-glow={n.id} x="-3" y="-3" width={n.w + 6} height={n.h + 6} rx="15" />
+            <rect class="flw-card" x="0" y="0" width={n.w} height={n.h} rx="12" />
+            <rect class="flw-chip" x="11" y={(n.h - 30) / 2} width="30" height="30" rx="9" />
+            <svg class="flw-ico" x="16" y={(n.h - 30) / 2 + 5} width="20" height="20" viewBox="0 0 24 24" set:html={icons[n.icon]} />
+            <text class="flw-title" x="49" y={n.h / 2 - 4}>{n.title}</text>
+            <text class="flw-sub" x="49" y={n.h / 2 + 11}>{n.sub}</text>
+          </g>
+        </g>
+      ))}
+    </svg>
+  </div>
+</figure>
+
+<style>
+  .flw {
+    position: relative;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    aspect-ratio: 472 / 548;
+    max-height: min(78vh, 600px);
+    border-radius: var(--radius, 16px);
+    border: 1px solid var(--line-strong);
+    overflow: hidden;
+    isolation: isolate;
+    background:
+      radial-gradient(120% 80% at 80% 0%, var(--primary-glow), transparent 58%),
+      linear-gradient(180deg, rgba(22, 16, 44, 0.96), rgba(12, 9, 26, 0.97));
+    box-shadow: 0 30px 70px -34px rgba(0, 0, 0, 0.7);
+  }
+
+  /* ── Barra superior tipo n8n ── */
+  .flw-bar {
+    display: flex; align-items: center; gap: 0.6rem;
+    padding: 0.7rem 0.85rem;
+    border-bottom: 1px solid var(--line);
+    background: rgba(255, 255, 255, 0.02);
+  }
+  .flw-bar-ico {
+    flex: none; display: grid; place-items: center;
+    width: 28px; height: 28px; border-radius: 8px;
+    color: #fff;
+    background: linear-gradient(135deg, var(--primary), var(--accent, #f08ab0));
+    box-shadow: 0 0 0 4px rgba(167, 107, 255, 0.14);
+  }
+  .flw-bar-titles { display: flex; flex-direction: column; gap: 0.08rem; margin-right: auto; }
+  .flw-bar-name { font-family: var(--serif); font-weight: 600; font-size: 0.84rem; color: var(--ink-100); }
+  .flw-bar-status {
+    display: inline-flex; align-items: center; gap: 0.32rem;
+    font-size: 0.58rem; color: var(--ink-60); letter-spacing: 0.01em;
+  }
+  .flw-bar-dot { width: 6px; height: 6px; border-radius: 50%; background: #5fd6a0; box-shadow: 0 0 8px #5fd6a0; }
+  .flw-bar-tag {
+    flex: none;
+    font-family: var(--mono); font-size: 0.56rem; letter-spacing: 0.06em; text-transform: lowercase;
+    color: var(--primary-soft);
+    padding: 0.22rem 0.5rem;
+    border: 1px solid var(--line-strong); border-radius: 999px;
+  }
+
+  /* ── Canvas ── */
+  .flw-canvas { flex: 1; min-height: 0; position: relative; }
+  .flw-canvas svg { display: block; width: 100%; height: 100%; }
+
+  /* Tarjetas de nodo */
+  .flw-card {
+    fill: rgba(18, 13, 36, 0.82);
+    stroke: var(--line-strong);
+    stroke-width: 1;
+  }
+  .flw-node--hub .flw-card {
+    fill: rgba(28, 18, 54, 0.9);
+    stroke: color-mix(in oklch, var(--primary) 50%, transparent);
+    stroke-width: 1.3;
+  }
+  .flw-glow {
+    fill: none;
+    stroke: var(--primary);
+    stroke-width: 2;
+    opacity: 0;
+    filter: drop-shadow(0 0 6px var(--primary-glow));
+  }
+  .flw-node--out .flw-glow { stroke: var(--accent); filter: drop-shadow(0 0 6px var(--accent-glow)); }
+  .flw-chip { fill: rgba(167, 107, 255, 0.16); }
+  .flw-node--out .flw-chip { fill: rgba(240, 138, 176, 0.14); }
+  .flw-ico { color: var(--primary-soft); }
+  .flw-node--out .flw-ico { color: var(--accent-soft); }
+
+  .flw-title { font-family: var(--serif); font-weight: 600; font-size: 12px; fill: var(--ink-100); }
+  .flw-sub { font-family: var(--mono); font-size: 6.8px; letter-spacing: 0; fill: var(--ink-60); }
+
+  /* Conectores punteados con flujo continuo */
+  .flw-conn {
+    fill: none;
+    stroke: var(--line-strong);
+    stroke-width: 1.5;
+    stroke-dasharray: 4 6;
+    animation: flwDash 0.9s linear infinite;
+  }
+  @keyframes flwDash { to { stroke-dashoffset: -10; } }
+
+  /* Paquetes de datos */
+  .flw-pkt {
+    fill: var(--primary-soft);
+    opacity: 0;
+    filter: drop-shadow(0 0 5px var(--primary-glow));
+  }
+  .flw-pkt--branch { fill: var(--accent-soft); filter: drop-shadow(0 0 5px var(--accent-glow)); }
+
+  /* Sin animación: estado final, nada se mueve. */
+  @media (prefers-reduced-motion: reduce) {
+    .flw-conn { animation: none; }
+  }
+
+  @media (max-width: 880px) {
+    .flw { aspect-ratio: 4 / 3; max-height: 420px; }
+  }
+</style>
+
+<script>
+  import gsap from 'gsap';
+
+  const PREFERS_REDUCED = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  document.querySelectorAll<HTMLElement>('[data-flw]').forEach((root) => {
+    const node = (id: string) => root.querySelector<SVGGElement>(`[data-node="${id}"]`);
+    const glow = (id: string) => root.querySelector<SVGRectElement>(`[data-glow="${id}"]`);
+    const conn = (id: string) => root.querySelector<SVGPathElement>(`[data-conn="${id}"]`);
+    const pkt  = (id: string) => root.querySelector<SVGCircleElement>(`[data-pkt="${id}"]`);
+
+    const nodeIds = ['trigger', 'hub', 'sheets', 'crm', 'gmail', 'whatsapp'];
+    const outIds  = ['sheets', 'crm', 'gmail', 'whatsapp'];
+    const connIds = ['trig', 'sheets', 'crm', 'gmail', 'whatsapp'];
+
+    const nodeEls = nodeIds.map(node).filter(Boolean) as SVGGElement[];
+    const connEls = connIds.map(conn).filter(Boolean) as SVGPathElement[];
+    const pktEls  = ['main', ...outIds].map(pkt).filter(Boolean) as SVGCircleElement[];
+    if (!nodeEls.length) return;
+
+    // Mueve un paquete a lo largo de un conector y, al llegar, ilumina el nodo.
+    const travel = (packet: SVGCircleElement, path: SVGPathElement, dur: number, arriveId: string) => {
+      const len = path.getTotalLength();
+      const o = { l: 0 };
+      const tl = gsap.timeline();
+      tl.set(o, { l: 0 });
+      tl.set(packet, { opacity: 0 });
+      tl.to(packet, { opacity: 1, duration: 0.12 });
+      tl.to(o, {
+        l: 1, duration: dur, ease: 'power1.inOut',
+        onUpdate: () => {
+          const p = path.getPointAtLength(o.l * len);
+          packet.setAttribute('transform', `translate(${p.x} ${p.y})`);
+        },
+      }, '<');
+      tl.to(packet, { opacity: 0, duration: 0.18 }, '>-0.04');
+      tl.add(() => pulse(arriveId), '>-0.22');
+      return tl;
+    };
+
+    const pulse = (id: string) => {
+      const g = glow(id);
+      if (g) gsap.fromTo(g, { opacity: 0 }, { opacity: 1, duration: 0.24, yoyo: true, repeat: 1, ease: 'sine.inOut' });
+    };
+
+    const setFinal = () => {
+      gsap.set(nodeEls, { opacity: 1, y: 0, scale: 1 });
+      gsap.set(connEls, { opacity: 1 });
+      gsap.set(pktEls, { opacity: 0 });
+    };
+
+    if (PREFERS_REDUCED) { setFinal(); return; }
+
+    // Bucle del flujo: trigger→hub, luego se ramifica a las 4 salidas en paralelo.
+    const flow = gsap.timeline({ repeat: -1, repeatDelay: 1, paused: true });
+    flow.add(travel(pktEls[0], conn('trig')!, 0.7, 'hub'));
+    const branch = gsap.timeline();
+    outIds.forEach((id, i) => {
+      branch.add(travel(pkt(id)!, conn(id)!, 0.85, id), i === 0 ? 0 : '<+=0.1');
+    });
+    flow.add(branch, '>-0.05');
+
+    // Reveal inicial escalonado (opacity + translateY + scale), luego arranca el bucle.
+    const reveal = () => {
+      gsap.set(nodeEls, { opacity: 0, y: 14, scale: 0.94, transformOrigin: '50% 50%' });
+      gsap.set(connEls, { opacity: 0 });
+      gsap.set(pktEls, { opacity: 0 });
+
+      const intro = gsap.timeline({ onComplete: () => flow.play() });
+      intro
+        .to(node('trigger'), { opacity: 1, y: 0, scale: 1, duration: 0.5, ease: 'power2.out' })
+        .to(conn('trig'), { opacity: 1, duration: 0.3 }, '-=0.15')
+        .to(node('hub'), { opacity: 1, y: 0, scale: 1, duration: 0.5, ease: 'power2.out' }, '-=0.1')
+        .to(['sheets', 'crm', 'gmail', 'whatsapp'].map(conn), { opacity: 1, duration: 0.35, stagger: 0.07 }, '-=0.1')
+        .to(['sheets', 'crm', 'gmail', 'whatsapp'].map(node), { opacity: 1, y: 0, scale: 1, duration: 0.45, stagger: 0.1, ease: 'power2.out' }, '-=0.25');
+    };
+
+    // Arranca cuando entra en viewport.
+    const io = new IntersectionObserver((entries, obs) => {
+      entries.forEach((e) => { if (e.isIntersecting) { reveal(); obs.disconnect(); } });
+    }, { threshold: 0.35 });
+    io.observe(root);
+  });
+</script>

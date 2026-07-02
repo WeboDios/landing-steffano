@@ -1,0 +1,83 @@
+---
+import Base from '../layouts/Base.astro';
+---
+
+<Base
+  title="Contacto · FLUIA · Agenda tu diagnóstico digital"
+  description="Cuéntanos qué problema tienes y te ayudamos a resolverlo. Respondemos en menos de 24 horas, de lunes a sábado, por WhatsApp o correo."
+  path="/contacto"
+>
+  <section class="contacto" aria-labelledby="contacto-heading">
+    <div class="container contacto-content" style="padding-top: var(--nav-h);">
+      <span class="section-label section-label--center">
+        <span class="section-label-mark" aria-hidden="true"></span>
+        Contacto
+      </span>
+      <h1 class="section-title section-title--center" id="contacto-heading">Conversemos.</h1>
+      <p class="contact-sub">
+        Cuéntanos qué problema tienes, no necesitas saber qué solución necesitas.
+        El diagnóstico es justamente para eso.
+      </p>
+
+      <div class="contact-response-badge" aria-label="Disponibilidad: respuesta en menos de 24 horas, lunes a sábado">
+        <span class="response-pulse" aria-hidden="true"></span>
+        Respondemos en menos de 24 h · Lunes a sábado
+      </div>
+
+      <form class="contact-form" id="contact-form" novalidate aria-label="Formulario de contacto rápido (se enviará por WhatsApp)">
+        <div class="contact-form-grid">
+          <div class="form-group">
+            <label for="cf-name">Tu nombre</label>
+            <input type="text" id="cf-name" name="name" placeholder="Juan García" autocomplete="name" />
+          </div>
+          <div class="form-group">
+            <label for="cf-service">¿Qué necesitas?</label>
+            <select id="cf-service" name="service">
+              <option value="">Selecciona una opción</option>
+              <option value="diagnosis">Diagnóstico digital (no sé qué necesito)</option>
+              <option value="dashboard">Dashboard ejecutivo</option>
+              <option value="automation">Automatización de procesos</option>
+              <option value="ai-agent">Agente IA</option>
+              <option value="web">Website o sistema interno</option>
+              <option value="other">Tengo otra consulta</option>
+            </select>
+          </div>
+          <div class="form-group form-group--full">
+            <label for="cf-message">
+              Cuéntanos el reto
+              <span class="label-optional">(opcional)</span>
+            </label>
+            <textarea
+              id="cf-message"
+              name="message"
+              rows="3"
+              placeholder="Ej: Tenemos datos en varias hojas de Excel y necesitamos un panel para el equipo comercial…"
+            ></textarea>
+          </div>
+        </div>
+        <div class="contact-form-footer">
+          <button type="submit" class="btn-primary contact-submit" aria-label="Enviar consulta (se abrirá WhatsApp con el mensaje)">
+            Enviar por WhatsApp
+            <span class="btn-arrow" aria-hidden="true">→</span>
+          </button>
+          <p class="contact-alt">
+            O escríbenos directamente a:
+            <a href="mailto:steffanomillones@gmail.com" class="contact-email-link">steffanomillones@gmail.com</a>
+          </p>
+        </div>
+      </form>
+    </div>
+  </section>
+
+  <script is:inline>
+    // Preseleccionar servicio si viene de /servicios (ej: /contacto?servicio=dashboard)
+    (function () {
+      var params = new URLSearchParams(location.search);
+      var svc = params.get('servicio');
+      var select = document.getElementById('cf-service');
+      if (svc && select && select.querySelector('option[value="' + svc + '"]')) {
+        select.value = svc;
+      }
+    })();
+  </script>
+</Base>

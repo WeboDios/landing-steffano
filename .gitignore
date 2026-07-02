@@ -13,3 +13,7 @@ desktop.ini
 *.log
 node_modules/
 uploads/
+
+# Astro
+dist/
+.astro/

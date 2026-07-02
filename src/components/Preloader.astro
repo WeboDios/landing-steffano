@@ -1,0 +1,505 @@
+---
+// Preloader "FLUIA flow" (logo animado + counter 0→100% + partículas WebGL).
+// Se muestra solo en la primera visita de la sesión (sessionStorage).
+---
+
+{/* Gating: corre ANTES de que el overlay pinte para evitar flash en visitas repetidas. */}
+<script is:inline>
+  (function () {
+    try {
+      if (sessionStorage.getItem('fluia-loaded')) {
+        document.documentElement.classList.add('is-preloaded');
+      } else {
+        document.documentElement.classList.add('is-loading');
+      }
+    } catch (e) {
+      document.documentElement.classList.add('is-loading');
+    }
+  })();
+</script>
+
+<div id="preloader" class="preloader" role="presentation" aria-hidden="true">
+  <canvas id="preloaderCanvas" class="preloader__canvas"></canvas>
+
+  <div class="preloader__stage">
+    <div class="preloader__logo-wrap" id="preloaderLogoWrap">
+      <span class="preloader__glow" id="preloaderGlow" aria-hidden="true"></span>
+      <img
+        class="preloader__logo"
+        id="preloaderLogo"
+        src="/assets/fluia-mark.png"
+        alt=""
+        width="180"
+        height="156"
+        decoding="async"
+      />
+    </div>
+
+    <div class="preloader__meta">
+      <div class="preloader__counter">
+        <span id="preloaderNum">0</span><span class="preloader__pct">%</span>
+      </div>
+      <div class="preloader__bar" aria-hidden="true">
+        <span class="preloader__bar-fill" id="preloaderBar"></span>
+      </div>
+      <div class="preloader__label">cargando experiencia</div>
+    </div>
+  </div>
+</div>
+
+<style is:global>
+  /* ── Gating de scroll y visibilidad (crítico) ── */
+  html.is-loading,
+  html.is-loading body {
+    overflow: hidden;
+  }
+  html.is-preloaded #preloader {
+    display: none;
+  }
+
+  /* El logo real del hero queda oculto durante la 1ª carga: el icono del
+     preloader "aterriza" sobre él y recién ahí se hace el relevo (crossfade). */
+  @media (prefers-reduced-motion: no-preference) {
+    html.is-loading .hero-brand-mark { opacity: 0; }
+  }
+
+  /* ── Overlay ── */
+  .preloader {
+    position: fixed;
+    inset: 0;
+    z-index: 99999;
+    display: grid;
+    place-items: center;
+    background:
+      radial-gradient(120% 120% at 50% 40%, #1a1233 0%, #120d24 60%, #0d0a1c 100%);
+    overflow: hidden;
+    will-change: clip-path, opacity;
+  }
+
+  .preloader__canvas {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    display: block;
+    pointer-events: none;
+  }
+
+  .preloader__stage {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2rem;
+  }
+
+  .preloader__logo-wrap {
+    position: relative;
+    width: 200px;
+    height: 200px;
+    display: grid;
+    place-items: center;
+    perspective: 700px;
+    will-change: transform;
+  }
+
+  .preloader__glow {
+    position: absolute;
+    width: 230px;
+    height: 230px;
+    border-radius: 50%;
+    /* Anillo de luz que rodea sin lavar el centro (icono más nítido). */
+    background: radial-gradient(
+      circle,
+      rgba(167, 107, 255, 0) 0%,
+      rgba(167, 107, 255, 0.18) 46%,
+      rgba(240, 138, 176, 0.12) 60%,
+      rgba(167, 107, 255, 0) 74%
+    );
+    filter: blur(4px);
+    pointer-events: none;
+    will-change: transform, opacity;
+  }
+
+  .preloader__logo {
+    position: relative;
+    width: 184px;
+    height: auto;
+    object-fit: contain;
+    transform-style: preserve-3d;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+    transform: translateZ(0);
+    will-change: transform;
+    filter: drop-shadow(0 4px 14px rgba(167, 107, 255, 0.3))
+      saturate(1.08) contrast(1.06);
+  }
+
+  .preloader__meta {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.85rem;
+  }
+
+  .preloader__counter {
+    font-family: 'JetBrains Mono', ui-monospace, monospace;
+    font-size: clamp(2.2rem, 6vw, 3.1rem);
+    font-weight: 500;
+    line-height: 1;
+    letter-spacing: -0.02em;
+    color: #f6f3ff;
+    display: flex;
+    align-items: baseline;
+    gap: 0.1em;
+  }
+
+  .preloader__pct {
+    font-size: 0.42em;
+    color: #c6a4ff;
+    transform: translateY(-0.15em);
+  }
+
+  .preloader__bar {
+    position: relative;
+    width: 190px;
+    height: 2px;
+    border-radius: 2px;
+    background: rgba(255, 255, 255, 0.08);
+    overflow: hidden;
+  }
+
+  .preloader__bar-fill {
+    position: absolute;
+    inset: 0;
+    transform-origin: left center;
+    transform: scaleX(0);
+    background: linear-gradient(90deg, #a76bff, #f08ab0);
+    box-shadow: 0 0 10px rgba(167, 107, 255, 0.6);
+  }
+
+  .preloader__label {
+    font-family: 'JetBrains Mono', ui-monospace, monospace;
+    font-size: 0.72rem;
+    letter-spacing: 0.32em;
+    text-transform: uppercase;
+    color: rgba(154, 147, 180, 0.85);
+    padding-left: 0.32em;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .preloader__logo,
+    .preloader__logo-wrap,
+    .preloader__glow {
+      animation: none !important;
+    }
+  }
+</style>
+
+<script>
+  import gsap from 'gsap';
+  import * as THREE from 'three';
+
+  const root = document.documentElement;
+
+  // Visita repetida: nada que hacer, el overlay ya está oculto por CSS.
+  if (!root.classList.contains('is-preloaded')) {
+    const preloader = document.getElementById('preloader') as HTMLElement;
+    const logo = document.getElementById('preloaderLogo') as HTMLElement;
+    const logoWrap = document.getElementById('preloaderLogoWrap') as HTMLElement;
+    const glow = document.getElementById('preloaderGlow') as HTMLElement;
+    const bar = document.getElementById('preloaderBar') as HTMLElement;
+    const numEl = document.getElementById('preloaderNum') as HTMLElement;
+
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    const finish = () => {
+      try {
+        sessionStorage.setItem('fluia-loaded', '1');
+      } catch (e) {}
+    };
+
+    const unlock = () => {
+      root.classList.remove('is-loading');
+    };
+
+    // Espera a que la carga real esté lista (fuentes + window load + decode del logo).
+    const whenLoaded = () => {
+      const fonts = (document as any).fonts
+        ? (document as any).fonts.ready.catch(() => {})
+        : Promise.resolve();
+      const win =
+        document.readyState === 'complete'
+          ? Promise.resolve()
+          : new Promise<void>((r) => window.addEventListener('load', () => r(), { once: true }));
+      const img =
+        logo instanceof HTMLImageElement && 'decode' in logo
+          ? (logo as HTMLImageElement).decode().catch(() => {})
+          : Promise.resolve();
+      return Promise.all([fonts, win, img]);
+    };
+
+    const render = (p: number) => {
+      numEl.textContent = `${Math.round(p * 100)}`;
+      bar.style.transform = `scaleX(${p})`;
+    };
+
+    // ── Modo reduced-motion: counter rápido + fade, sin WebGL ──
+    if (reduceMotion) {
+      const proxy = { v: 0 };
+      gsap.to(proxy, {
+        v: 100,
+        duration: 0.6,
+        ease: 'power1.out',
+        onUpdate: () => {
+          numEl.textContent = `${Math.round(proxy.v)}`;
+          bar.style.transform = `scaleX(${proxy.v / 100})`;
+        },
+        onComplete: () => {
+          finish();
+          gsap.to(preloader, {
+            opacity: 0,
+            duration: 0.4,
+            onComplete: () => {
+              unlock();
+              preloader.remove();
+            },
+          });
+        },
+      });
+    } else {
+      // ── Experiencia completa ──
+
+      // Animación orgánica del icono (flotar + cabeceo 3D + respiración), sin giro completo.
+      const iconAnim = gsap.timeline();
+      iconAnim
+        .to(logo, { y: -14, duration: 1.3, ease: 'sine.inOut', yoyo: true, repeat: -1 }, 0)
+        .to(logo, { rotationZ: 8, duration: 1.7, ease: 'sine.inOut', yoyo: true, repeat: -1 }, 0)
+        .to(logo, { rotationY: 15, duration: 2.2, ease: 'sine.inOut', yoyo: true, repeat: -1 }, 0)
+        .to(logoWrap, { scale: 1.06, duration: 1.05, ease: 'sine.inOut', yoyo: true, repeat: -1 }, 0);
+
+      // Pulso del glow.
+      const glowAnim = gsap.to(glow, {
+        scale: 1.14,
+        opacity: 0.55,
+        duration: 1.0,
+        ease: 'sine.inOut',
+        yoyo: true,
+        repeat: -1,
+      });
+
+      // ── Capa de partículas three.js ──
+      const canvas = document.getElementById('preloaderCanvas') as HTMLCanvasElement;
+      const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+
+      const scene = new THREE.Scene();
+      const camera = new THREE.PerspectiveCamera(60, 1, 0.1, 100);
+      camera.position.z = 14;
+
+      // Sprite suave para cada partícula.
+      const makeSprite = () => {
+        const c = document.createElement('canvas');
+        c.width = c.height = 64;
+        const ctx = c.getContext('2d')!;
+        const g = ctx.createRadialGradient(32, 32, 0, 32, 32, 32);
+        g.addColorStop(0, 'rgba(255,255,255,1)');
+        g.addColorStop(0.35, 'rgba(255,255,255,0.75)');
+        g.addColorStop(1, 'rgba(255,255,255,0)');
+        ctx.fillStyle = g;
+        ctx.fillRect(0, 0, 64, 64);
+        return new THREE.CanvasTexture(c);
+      };
+
+      // Más partículas, más pequeñas y más dispersas (menos densas visualmente).
+      const COUNT = 480;
+      const positions = new Float32Array(COUNT * 3);
+      const colors = new Float32Array(COUNT * 3);
+      const baseRadius = new Float32Array(COUNT);
+      const angle = new Float32Array(COUNT);
+      const speed = new Float32Array(COUNT);
+      const zPos = new Float32Array(COUNT);
+
+      const cPurple = new THREE.Color('#a76bff');
+      const cPink = new THREE.Color('#f08ab0');
+      const cSoft = new THREE.Color('#c6a4ff');
+
+      for (let i = 0; i < COUNT; i++) {
+        const r = 4.5 + Math.random() * 13; // dispersión más amplia
+        const a = Math.random() * Math.PI * 2;
+        baseRadius[i] = r;
+        angle[i] = a;
+        speed[i] = (0.16 + Math.random() * 0.3) * (Math.random() > 0.5 ? 1 : -1); // más rápido
+        zPos[i] = (Math.random() - 0.5) * 9;
+        positions[i * 3] = Math.cos(a) * r;
+        positions[i * 3 + 1] = Math.sin(a) * r;
+        positions[i * 3 + 2] = zPos[i];
+
+        const t = Math.random();
+        const col =
+          t < 0.5 ? cPurple.clone().lerp(cSoft, t * 2) : cSoft.clone().lerp(cPink, (t - 0.5) * 2);
+        colors[i * 3] = col.r;
+        colors[i * 3 + 1] = col.g;
+        colors[i * 3 + 2] = col.b;
+      }
+
+      const geo = new THREE.BufferGeometry();
+      geo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+      geo.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+
+      const mat = new THREE.PointsMaterial({
+        size: 0.22, // más pequeñas
+        map: makeSprite(),
+        vertexColors: true,
+        transparent: true,
+        opacity: 0.85,
+        depthWrite: false,
+        blending: THREE.AdditiveBlending,
+        sizeAttenuation: true,
+      });
+
+      const points = new THREE.Points(geo, mat);
+      scene.add(points);
+
+      const resize = () => {
+        const w = window.innerWidth;
+        const h = window.innerHeight;
+        renderer.setSize(w, h, false);
+        camera.aspect = w / h;
+        camera.updateProjectionMatrix();
+      };
+      resize();
+      window.addEventListener('resize', resize);
+
+      // Estado animado: converge=0 (deriva normal) → 1 (estallido hacia el centro).
+      const fx = { converge: 0, spin: 0 };
+      const posAttr = geo.getAttribute('position') as THREE.BufferAttribute;
+
+      let rafId = 0;
+      const renderLoop = () => {
+        fx.spin += 0.0055; // giro global más rápido
+        for (let i = 0; i < COUNT; i++) {
+          angle[i] += speed[i] * 0.016;
+          const r = baseRadius[i] * (1 - fx.converge * 0.92);
+          posAttr.array[i * 3] = Math.cos(angle[i] + fx.spin) * r;
+          posAttr.array[i * 3 + 1] = Math.sin(angle[i] + fx.spin) * r;
+          posAttr.array[i * 3 + 2] = zPos[i] * (1 - fx.converge) + fx.converge * 6;
+        }
+        posAttr.needsUpdate = true;
+        points.rotation.z += 0.0024;
+        renderer.render(scene, camera);
+        rafId = requestAnimationFrame(renderLoop);
+      };
+      rafId = renderLoop();
+
+      const disposeThree = () => {
+        cancelAnimationFrame(rafId);
+        window.removeEventListener('resize', resize);
+        geo.dispose();
+        mat.dispose();
+        (mat.map as THREE.Texture)?.dispose();
+        renderer.dispose();
+      };
+
+      // ── Counter híbrido: tiempo mínimo + carga real ──
+      const MIN_DUR = 1.8;
+      const start = performance.now();
+      let loaded = false;
+      whenLoaded().then(() => {
+        loaded = true;
+      });
+
+      let done = false;
+      const tick = (now: number) => {
+        const elapsed = (now - start) / 1000;
+        const timeProg = Math.min(elapsed / MIN_DUR, 1);
+        // No pasa de 92% hasta que la carga real termine.
+        const p = loaded ? timeProg : Math.min(timeProg, 0.92);
+        render(p);
+        if (p >= 1) {
+          if (!done) {
+            done = true;
+            exit();
+          }
+          return;
+        }
+        requestAnimationFrame(tick);
+      };
+      requestAnimationFrame(tick);
+
+      // ── Salida ──
+      const heroMark = document.querySelector('.hero-brand-mark') as HTMLElement | null;
+
+      const exit = () => {
+        finish();
+        iconAnim.kill();
+        glowAnim.kill();
+
+        // ── Transición shared-element: el icono vuela hasta el logo del hero ──
+        if (heroMark) {
+          // Limpia las transformaciones orgánicas para medir el tamaño real.
+          gsap.set(logoWrap, { scale: 1 });
+          gsap.set(logo, { rotationX: 0, rotationY: 0, rotationZ: 0, x: 0, y: 0, scale: 1 });
+
+          const s = logo.getBoundingClientRect();
+          const t = heroMark.getBoundingClientRect();
+
+          if (s.width && t.width) {
+            const scale = t.width / s.width;
+            const dx = t.left + t.width / 2 - (s.left + s.width / 2);
+            const dy = t.top + t.height / 2 - (s.top + s.height / 2);
+
+            const tl = gsap.timeline({
+              onComplete: () => {
+                unlock();
+                disposeThree();
+                preloader.remove();
+              },
+            });
+
+            tl.to(fx, { converge: 1, duration: 0.7, ease: 'power3.in' }, 0)
+              .to(mat, { opacity: 0, duration: 0.6, ease: 'power2.in' }, 0.1)
+              .to('.preloader__meta', { opacity: 0, y: 8, duration: 0.4, ease: 'power2.in' }, 0)
+              .to(glow, { opacity: 0, duration: 0.5, ease: 'power2.in' }, 0.15)
+              // El icono se desplaza y escala hasta calzar con el logo del hero.
+              .to(
+                logo,
+                { x: dx, y: dy, scale, transformOrigin: 'center center', duration: 0.95, ease: 'power3.inOut' },
+                0.12
+              )
+              // El logo real aparece justo debajo del que vuela (relevo invisible).
+              .set(heroMark, { opacity: 1 }, 0.92)
+              // El fondo del preloader se desvanece revelando la página; ambos logos
+              // están superpuestos, así que el crossfade es imperceptible.
+              .to(preloader, { opacity: 0, duration: 0.6, ease: 'power2.inOut' }, 0.98);
+            return;
+          }
+        }
+
+        // ── Salida estándar (otras páginas): estallido + clip-path ──
+        const tl = gsap.timeline({
+          onComplete: () => {
+            unlock();
+            disposeThree();
+            preloader.remove();
+          },
+        });
+
+        tl.to(fx, { converge: 1, duration: 0.7, ease: 'power3.in' }, 0)
+          .to(mat, { opacity: 0, duration: 0.6, ease: 'power2.in' }, 0.15)
+          .to(logoWrap, { scale: 1.16, duration: 0.5, ease: 'power2.out' }, 0.1)
+          .to(
+            '.preloader__stage',
+            { opacity: 0, scale: 0.92, duration: 0.45, ease: 'power2.in' },
+            0.35
+          )
+          .to(
+            preloader,
+            { clipPath: 'inset(0 0 100% 0)', duration: 0.8, ease: 'power4.inOut' },
+            0.55
+          );
+      };
+    }
+  }
+</script>

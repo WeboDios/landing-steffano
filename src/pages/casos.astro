@@ -1,0 +1,324 @@
+---
+import Base from '../layouts/Base.astro';
+import CtaBanner from '../components/CtaBanner.astro';
+
+// Iconos inline (estilo Tabler / Lucide, stroke currentColor)
+const icons = {
+  before:
+    '<svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l-2 2"/><path d="m15 9 4 4M19 9l-4 4"/></svg>',
+  solution:
+    '<svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 7h-9M14 17H5"/><circle cx="17" cy="17" r="3"/><circle cx="7" cy="7" r="3"/></svg>',
+  result:
+    '<svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 21h8M12 17v4M7 4h10v5a5 5 0 0 1-10 0V4Z"/><path d="M17 5h3v2a3 3 0 0 1-3 3M7 5H4v2a3 3 0 0 0 3 3"/></svg>',
+  arrow:
+    '<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>',
+  bolt:
+    '<svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2 4 14h7l-1 8 9-12h-7l1-8Z"/></svg>',
+  chart:
+    '<svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18M8 17v-4M13 17V9M18 17v-7"/></svg>',
+  robot:
+    '<svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="8" width="16" height="11" rx="2"/><path d="M12 8V5M9 13h.01M15 13h.01M2 14v2M22 14v2"/></svg>',
+};
+
+// Colores de marca para los puntos de cada herramienta
+const toolDots = {
+  n8n: '#FF6D3A',
+  'Google Sheets': '#34A853',
+  'Looker Studio': '#4285F4',
+  BigQuery: '#4285F4',
+  'Google Calendar': '#EA4335',
+  Telegram: '#26A5E4',
+};
+
+const casos = [
+  {
+    variant: 'auto',
+    badgeIcon: 'bolt',
+    eyebrow: 'Automatización · Análisis de mercado',
+    title: 'De 2 semanas a 1 hora',
+    tag: 'Automatización',
+    stat: '79 h',
+    statUnit: 'liberadas / mes',
+    antes:
+      'Un equipo de análisis dedicaba <strong>2 semanas por ciclo</strong> a recolectar precios y datos de mercado a mano: abrir páginas, copiar valores, armar el reporte. Trabajo lento y propenso a errores.',
+    solucion:
+      'Un flujo en n8n que recolecta los datos de las fuentes, los valida, los estructura en una base central y genera el reporte listo para revisión, <strong>sin intervención manual</strong>.',
+    resultado:
+      '<strong>79 horas liberadas al mes.</strong> El ciclo pasó de 2 semanas a 1 hora, con datos más consistentes y un reporte siempre actualizado.',
+    quote: 'Lo que antes nos tomaba dos semanas, ahora está listo antes del primer café.',
+    tools: ['n8n', 'Google Sheets', 'APIs', 'Webhooks'],
+  },
+  {
+    variant: 'dash',
+    badgeIcon: 'chart',
+    eyebrow: 'Dashboard · Control de operación',
+    title: 'El dashboard se pagó solo en 30 días',
+    tag: 'Dashboard',
+    stat: '30',
+    statUnit: 'días para ROI',
+    antes:
+      'La gerencia no sabía en qué se iba realmente la capacidad del equipo. La información existía repartida en varias hojas, pero armar una foto completa <strong>tomaba días</strong>.',
+    solucion:
+      'Un dashboard ejecutivo conectado a fuentes reales: capacidad por persona, carga por proyecto y tendencias de operación, <strong>accesible en tiempo real</strong>.',
+    resultado:
+      'El costo se recuperó <strong>en los primeros 30 días</strong>: la gerencia detectó dónde se perdía capacidad y reasignó al equipo con datos, no con intuición.',
+    quote: 'Por primera vez vimos en una sola pantalla dónde se iba el tiempo del equipo.',
+    tools: ['Looker Studio', 'BigQuery', 'Google Sheets'],
+  },
+  {
+    variant: 'ia',
+    badgeIcon: 'robot',
+    eyebrow: 'Agente IA · Asistente personal',
+    title: 'Un asistente que trabaja 24/7',
+    tag: 'Agente IA',
+    stat: '0 min',
+    statUnit: 'en coordinación',
+    antes:
+      'Un emprendedor perdía tiempo todos los días agendando reuniones, gestionando contactos y coordinando su día. Necesitaba un asistente que <strong>no olvidara nada</strong>.',
+    solucion:
+      'Un agente IA conectado a Google Calendar y Telegram. Recibe mensajes en lenguaje natural, verifica disponibilidad, propone alternativas y crea eventos <strong>en segundos</strong>.',
+    resultado:
+      '<strong>Cero minutos</strong> invertidos en agendar o coordinar. Cero errores de doble reserva. Agenda siempre actualizada y accesible desde el celular.',
+    quote: 'Le escribo como si fuera un asistente humano. Él hace el resto.',
+    tools: ['Agente IA', 'Google Calendar', 'Telegram', 'n8n'],
+  },
+];
+---
+
+<Base
+  title="Casos de éxito · FLUIA · Resultados medidos en horas y dinero"
+  description="Casos reales de automatización, dashboards y agentes IA: 79 horas liberadas al mes, dashboards con ROI en 30 días y asistentes que coordinan agendas 24/7."
+  path="/casos"
+>
+  <header class="page-header container">
+    <span class="section-label">
+      <span class="section-label-mark" aria-hidden="true"></span>
+      Casos reales
+    </span>
+    <h1 class="page-title">Antes, solución y resultado.</h1>
+    <p class="page-sub">
+      Sin promesas abstractas. Cada caso muestra el problema que existía, lo que FLUIA construyó
+      y lo que cambió, medido en horas y dinero.
+    </p>
+  </header>
+
+  <section class="page-section page-section--tight" aria-label="Casos de éxito">
+    <div class="container cases-stack">
+      {casos.map((c, i) => (
+        <>
+          {i > 0 && <hr class="case-divider" />}
+          <article class={`case-card glow-card case-card--${c.variant}`} id={`caso-${i + 1}`}>
+            <div class="case-top">
+              <div class="case-meta">
+                <span class="case-category">{c.eyebrow}</span>
+                <h2 class="case-title">{c.title}</h2>
+                <span class="case-badge">
+                  <span class="case-badge-ico" set:html={icons[c.badgeIcon]} />
+                  {c.tag}
+                </span>
+              </div>
+              <div class="metric-block">
+                <span class="metric-number">{c.stat}</span>
+                <span class="metric-label">{c.statUnit}</span>
+              </div>
+            </div>
+
+            <div class="flow-grid">
+              <div class="flow-col">
+                <span class="flow-label flow-label--before">
+                  <span class="flow-ico" set:html={icons.before} /> Antes
+                </span>
+                <p class="flow-text" set:html={c.antes} />
+              </div>
+              <div class="flow-arrow" aria-hidden="true" set:html={icons.arrow} />
+              <div class="flow-col">
+                <span class="flow-label flow-label--solucion">
+                  <span class="flow-ico" set:html={icons.solution} /> Solución
+                </span>
+                <p class="flow-text" set:html={c.solucion} />
+              </div>
+              <div class="flow-arrow" aria-hidden="true" set:html={icons.arrow} />
+              <div class="flow-col flow-col--result">
+                <span class="flow-label flow-label--resultado">
+                  <span class="flow-ico" set:html={icons.result} /> Resultado
+                </span>
+                <p class="flow-text" set:html={c.resultado} />
+              </div>
+            </div>
+
+            <div class="case-footer">
+              <span class="tools-label">Construido con</span>
+              <ul class="tools-row" role="list">
+                {c.tools.map((t) => (
+                  <li class={`tool-chip${t === 'Agente IA' ? ' tool-chip--ia' : ''}`}>
+                    {toolDots[t] && <span class="tool-dot" style={`background:${toolDots[t]}`} />}
+                    {t}
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            <div class="quote-row">
+              <span class="quote-bar" aria-hidden="true"></span>
+              <p class="quote-text">"{c.quote}"</p>
+            </div>
+          </article>
+        </>
+      ))}
+
+      <div class="projects-bridge">
+        <p class="bridge-text">¿Tu empresa tiene un reto parecido?</p>
+        <a href="/contacto" class="bridge-link">Cuéntanos →</a>
+      </div>
+    </div>
+  </section>
+
+  <CtaBanner />
+</Base>
+
+<style>
+  .cases-stack { display: flex; flex-direction: column; }
+
+  /* ── Tarjeta de caso ── */
+  .case-card {
+    --case-color: var(--primary);
+    --case-color-soft: var(--primary-soft);
+    padding: clamp(1.75rem, 3.5vw, 2.5rem);
+    border: 1px solid color-mix(in oklch, var(--case-color) 18%, transparent);
+    border-radius: var(--r-xl);
+    background: linear-gradient(180deg, rgba(22, 15, 46, 0.5), rgba(13, 10, 28, 0.36));
+    backdrop-filter: blur(12px) saturate(120%);
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+  .case-card--auto {
+    --case-color: var(--primary);
+    --case-color-soft: var(--primary-soft);
+  }
+  .case-card--dash {
+    --case-color: var(--accent);
+    --case-color-soft: var(--accent-soft);
+  }
+  .case-card--ia {
+    --case-color: #63d4ff;
+    --case-color-soft: #9de4f8;
+  }
+
+  /* ── Top: meta + métrica ── */
+  .case-top {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+  }
+  .case-meta { display: flex; flex-direction: column; gap: 0.5rem; }
+  .case-category {
+    font-size: 0.7rem; font-weight: 600; letter-spacing: 0.14em;
+    text-transform: uppercase; color: var(--ink-40);
+  }
+  .case-title {
+    font-family: var(--serif); font-weight: 600; font-size: clamp(1.25rem, 2.4vw, 1.6rem);
+    line-height: 1.2; color: var(--ink-100); letter-spacing: -0.01em; text-wrap: balance;
+    margin: 0;
+  }
+  .case-badge {
+    display: inline-flex; align-items: center; gap: 0.4rem; width: fit-content;
+    margin-top: 0.15rem; padding: 0.3rem 0.8rem; border-radius: 999px;
+    font-size: 0.66rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase;
+    color: var(--case-color-soft);
+    background: color-mix(in oklch, var(--case-color) 12%, transparent);
+    border: 1px solid color-mix(in oklch, var(--case-color) 30%, transparent);
+  }
+  .case-badge-ico { display: inline-flex; }
+
+  .metric-block { text-align: right; flex-shrink: 0; }
+  .metric-number {
+    display: block; font-family: var(--serif); font-weight: 600;
+    font-size: clamp(2rem, 4vw, 2.85rem); line-height: 1;
+    letter-spacing: -0.02em; color: var(--case-color-soft);
+  }
+  .metric-label {
+    display: block; margin-top: 0.3rem; font-size: 0.62rem; font-weight: 600;
+    letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink-40);
+  }
+
+  /* ── Flujo: Antes → Solución → Resultado ── */
+  .flow-grid {
+    display: grid; grid-template-columns: 1fr auto 1fr auto 1fr;
+    align-items: stretch; gap: 0;
+  }
+  .flow-col {
+    display: flex; flex-direction: column; gap: 0.65rem;
+    padding: 1.15rem 1.25rem;
+    background: rgba(0, 0, 0, 0.22);
+    border: 1px solid var(--line); border-radius: var(--r-lg);
+  }
+  .flow-col--result {
+    background: linear-gradient(160deg, color-mix(in oklch, var(--case-color) 12%, transparent), transparent 82%);
+    border-color: color-mix(in oklch, var(--case-color) 24%, transparent);
+  }
+  .flow-arrow {
+    display: flex; align-items: center; justify-content: center;
+    padding: 0 0.75rem; color: color-mix(in oklch, var(--case-color) 55%, transparent);
+  }
+  .flow-label {
+    display: inline-flex; align-items: center; gap: 0.4rem;
+    font-size: 0.64rem; font-weight: 600; letter-spacing: 0.16em; text-transform: uppercase;
+  }
+  .flow-ico { display: inline-flex; }
+  .flow-label--before { color: var(--ink-40); }
+  .flow-label--solucion { color: var(--case-color-soft); }
+  .flow-label--resultado { color: var(--case-color-soft); }
+  .flow-text { font-size: 0.88rem; color: var(--ink-80); line-height: 1.6; text-wrap: pretty; margin: 0; }
+  .flow-col--result .flow-text { color: var(--ink-100); }
+  .flow-text :global(strong) { color: var(--ink-100); font-weight: 600; }
+
+  /* ── Footer: herramientas ── */
+  .case-footer {
+    display: flex; align-items: center; flex-wrap: wrap; gap: 0.6rem;
+    padding-top: 1.25rem; border-top: 1px solid var(--line);
+  }
+  .tools-label {
+    font-size: 0.66rem; font-weight: 600; letter-spacing: 0.1em;
+    text-transform: uppercase; color: var(--ink-40); margin-right: 0.2rem;
+  }
+  .tools-row { display: contents; }
+  .tool-chip {
+    display: inline-flex; align-items: center; gap: 0.4rem;
+    padding: 0.3rem 0.75rem; border-radius: 999px;
+    background: rgba(255, 255, 255, 0.04); border: 1px solid var(--line-strong);
+    font-size: 0.76rem; color: var(--ink-80); font-weight: 500;
+  }
+  .tool-chip--ia {
+    color: #9de4f8; border-color: rgba(99, 212, 255, 0.25);
+    background: rgba(99, 212, 255, 0.07);
+  }
+  .tool-dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
+
+  /* ── Quote ── */
+  .quote-row { display: flex; align-items: stretch; gap: 0.8rem; }
+  .quote-bar {
+    width: 3px; min-height: 100%; flex-shrink: 0; border-radius: 999px;
+    background: linear-gradient(180deg, var(--case-color), var(--accent));
+  }
+  .quote-text {
+    font-size: 0.9rem; font-style: italic; color: var(--ink-80);
+    line-height: 1.55; margin: 0;
+  }
+
+  /* ── Divider entre casos ── */
+  .case-divider {
+    border: none; border-top: 1px solid color-mix(in oklch, var(--primary) 9%, transparent);
+    margin: 1.5rem 0;
+  }
+
+  /* ── Responsive ── */
+  @media (max-width: 760px) {
+    .case-top { flex-direction: column-reverse; align-items: flex-start; gap: 1rem; }
+    .metric-block { text-align: left; }
+    .flow-grid { grid-template-columns: 1fr; gap: 0.6rem; }
+    .flow-arrow { transform: rotate(90deg); padding: 0.25rem 0; justify-content: flex-start; }
+  }
+</style>

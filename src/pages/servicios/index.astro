@@ -1,0 +1,94 @@
+---
+import Base from '../../layouts/Base.astro';
+import CtaBanner from '../../components/CtaBanner.astro';
+import { servicios, diagnostico } from '../../data/servicios.js';
+
+// Sparkle / estrella decorativa (badge superior y separador del diagnóstico).
+const sparkle =
+  '<path d="M12 3l1.7 5.5a3 3 0 0 0 1.8 1.8L21 12l-5.5 1.7a3 3 0 0 0-1.8 1.8L12 21l-1.7-5.5a3 3 0 0 0-1.8-1.8L3 12l5.5-1.7a3 3 0 0 0 1.8-1.8L12 3z"/>';
+
+// Íconos de los entregables del diagnóstico, en el mismo orden que diagnostico.usos.
+const diagIcons = [
+  '<circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="M8.6 13.5l6.8 4M15.4 6.5l-6.8 4"/>',
+  '<circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/>',
+  '<ellipse cx="12" cy="5" rx="8" ry="3"/><path d="M4 5v6c0 1.7 3.6 3 8 3s8-1.3 8-3V5"/><path d="M4 11v6c0 1.7 3.6 3 8 3s8-1.3 8-3v-6"/>',
+  '<rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 12h18M12 3v18"/>',
+  '<circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1"/>',
+  '<path d="M12 2l9 5-9 5-9-5 9-5z"/><path d="M3 12l9 5 9-5M3 17l9 5 9-5"/>',
+];
+---
+
+<Base
+  title="Servicios · FLUIA · Dashboards, Automatización, Agentes IA y Sistemas"
+  description="Cuatro servicios organizados por el problema que resuelven: dashboards y visualización de datos, automatización de procesos con n8n, agentes IA operativos y websites con sistemas internos. Más un diagnóstico digital como punto de partida."
+  path="/servicios"
+>
+  <header class="page-header container">
+    <span class="svc-badge">
+      <svg viewBox="0 0 24 24" class="svc-badge-icon" aria-hidden="true" set:html={sparkle} />
+      Soluciones para operaciones inteligentes
+    </span>
+    <h1 class="page-title svc-hub-title">
+      Elige el problema,<br />
+      <span class="svc-hub-title-grad">no la herramienta.</span>
+    </h1>
+    <p class="page-sub">
+      Cuatro soluciones concretas para dejar de operar en modo manual. Entra a cada una para ver
+      qué problema resuelve, para quién es y qué recibes exactamente.
+    </p>
+  </header>
+
+  <section class="page-section page-section--tight" aria-label="Catálogo de servicios">
+    <div class="container">
+      <div class="svc-hub-grid">
+        {servicios.map((s) => (
+          <a href={`/servicios/${s.slug}`} class="svc-card glow-card">
+            <span class="svc-card-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" set:html={s.icon ?? ''} />
+            </span>
+            <span class="svc-card-body">
+              <span class="svc-preview-cat">{s.cat}</span>
+              <span class="svc-card-name">{s.name}</span>
+              <span class="svc-card-hook">{s.hook}</span>
+              <span class="svc-card-link">Ver servicio <span aria-hidden="true">→</span></span>
+            </span>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="page-section" aria-labelledby="diagnostico-heading" id="diagnostico">
+    <div class="container">
+      <div class="svc-diag glow-card">
+        <div class="svc-diag-text">
+          <span class="svc-preview-cat">{diagnostico.cat}</span>
+          <h2 class="svc-diag-title" id="diagnostico-heading">{diagnostico.title}</h2>
+          <p class="svc-diag-sub">{diagnostico.positioning}</p>
+          <a href={`/contacto?servicio=${diagnostico.service}`} class="btn-primary svc-diag-cta">
+            {diagnostico.cta}
+            <span class="btn-arrow" aria-hidden="true">→</span>
+          </a>
+        </div>
+        <div class="svc-diag-divider" aria-hidden="true">
+          <svg viewBox="0 0 24 24" set:html={sparkle} />
+        </div>
+        <ul class="svc-diag-list" role="list">
+          {diagnostico.usos.map((u, i) => (
+            <li>
+              <span class="svc-diag-ico" aria-hidden="true">
+                <svg viewBox="0 0 24 24" set:html={diagIcons[i] ?? ''} />
+              </span>
+              {u}
+            </li>
+          ))}
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <CtaBanner
+    title="¿Aún no sabes cuál encaja con tu operación?"
+    sub="Para eso existe el diagnóstico digital: revisamos tu proceso y te decimos exactamente qué resolver primero, con una ruta priorizada por impacto."
+  />
+</Base>

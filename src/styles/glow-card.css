@@ -1,0 +1,130 @@
+/* ─────────────────────────────────────────────
+   GLOW CARD · borde direccional que sigue el cursor
+   Port a vanilla del componente BorderGlow (React Bits).
+   Uso: añade la clase .glow-card a una tarjeta que ya tenga
+   border-radius. El script de Base.astro inyecta el
+   <span class="edge-light"> y actualiza --cursor-angle y
+   --edge-proximity en pointermove (solo puntero fino + hover).
+   Sin JS las tres capas quedan con opacidad 0: no pasa nada.
+   ───────────────────────────────────────────── */
+
+.glow-card {
+  --edge-proximity: 0;
+  --cursor-angle: 45deg;
+  --edge-sensitivity: 30;
+  --color-sensitivity: 50; /* edge-sensitivity + 20 */
+  --glow-padding: 40px;
+  --cone-spread: 25;
+  --fill-opacity: 0.35;
+  --glow-hsl: 268deg 85% 85%; /* lavanda, cercano a --primary-soft */
+
+  position: relative;
+  isolation: isolate;
+}
+
+.glow-card::before,
+.glow-card::after {
+  content: "";
+  z-index: -1;
+}
+
+.glow-card::before,
+.glow-card::after,
+.glow-card > .edge-light {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  transition: opacity 0.25s ease-out;
+}
+
+.glow-card:not(:hover)::before,
+.glow-card:not(:hover)::after,
+.glow-card:not(:hover) > .edge-light {
+  opacity: 0;
+  transition: opacity 0.75s ease-in-out;
+}
+
+/* Anillo de borde mesh-gradient, recortado al cono que apunta al cursor.
+   La máscara content-box/exclude deja solo el anillo de 1.5px, así el
+   interior glass de la tarjeta no se tapa (el original asume fondo opaco). */
+.glow-card::before {
+  padding: 1.5px;
+  background:
+    radial-gradient(at 80% 55%, var(--primary) 0px, transparent 50%),
+    radial-gradient(at 69% 34%, var(--accent) 0px, transparent 50%),
+    radial-gradient(at 8% 6%, #7dd3fc 0px, transparent 50%),
+    radial-gradient(at 41% 38%, var(--primary) 0px, transparent 50%),
+    radial-gradient(at 86% 85%, var(--accent) 0px, transparent 50%),
+    radial-gradient(at 82% 18%, #7dd3fc 0px, transparent 50%),
+    radial-gradient(at 51% 4%, var(--accent) 0px, transparent 50%),
+    linear-gradient(var(--primary) 0 100%);
+  opacity: calc((var(--edge-proximity) - var(--color-sensitivity)) / (100 - var(--color-sensitivity)));
+  mask-image:
+    conic-gradient(
+      from var(--cursor-angle) at center,
+      #000 calc(var(--cone-spread) * 1%),
+      transparent calc((var(--cone-spread) + 15) * 1%),
+      transparent calc((100 - var(--cone-spread) - 15) * 1%),
+      #000 calc((100 - var(--cone-spread)) * 1%)
+    ),
+    linear-gradient(#000 0 0),
+    linear-gradient(#000 0 0);
+  mask-clip: border-box, content-box, border-box;
+  mask-composite: intersect, exclude, add;
+}
+
+/* Relleno mesh-gradient suave cerca de los bordes (soft-light) */
+.glow-card::after {
+  background:
+    radial-gradient(at 80% 55%, var(--primary) 0px, transparent 50%),
+    radial-gradient(at 69% 34%, var(--accent) 0px, transparent 50%),
+    radial-gradient(at 8% 6%, #7dd3fc 0px, transparent 50%),
+    radial-gradient(at 41% 38%, var(--primary) 0px, transparent 50%),
+    radial-gradient(at 86% 85%, var(--accent) 0px, transparent 50%),
+    radial-gradient(at 82% 18%, #7dd3fc 0px, transparent 50%),
+    radial-gradient(at 51% 4%, var(--accent) 0px, transparent 50%),
+    linear-gradient(var(--primary) 0 100%);
+  mask-image:
+    linear-gradient(to bottom, #000, #000),
+    radial-gradient(ellipse at 50% 50%, #000 40%, transparent 65%),
+    radial-gradient(ellipse at 66% 66%, #000 5%, transparent 40%),
+    radial-gradient(ellipse at 33% 33%, #000 5%, transparent 40%),
+    radial-gradient(ellipse at 66% 33%, #000 5%, transparent 40%),
+    radial-gradient(ellipse at 33% 66%, #000 5%, transparent 40%),
+    conic-gradient(from var(--cursor-angle) at center, transparent 5%, #000 15%, #000 85%, transparent 95%);
+  mask-composite: subtract, add, add, add, add, add;
+  mix-blend-mode: soft-light;
+  opacity: calc(var(--fill-opacity) * (var(--edge-proximity) - var(--color-sensitivity)) / (100 - var(--color-sensitivity)));
+}
+
+/* Halo exterior que se extiende fuera de la tarjeta */
+.glow-card > .edge-light {
+  inset: calc(var(--glow-padding) * -1);
+  z-index: 1;
+  mask-image:
+    conic-gradient(from var(--cursor-angle) at center, #000 2.5%, transparent 10%, transparent 90%, #000 97.5%);
+  opacity: calc((var(--edge-proximity) - var(--edge-sensitivity)) / (100 - var(--edge-sensitivity)));
+  mix-blend-mode: plus-lighter;
+}
+
+.glow-card > .edge-light::before {
+  content: "";
+  position: absolute;
+  inset: var(--glow-padding);
+  border-radius: inherit;
+  box-shadow:
+    inset 0 0 0 1px hsl(var(--glow-hsl) / 100%),
+    inset 0 0 1px 0 hsl(var(--glow-hsl) / 60%),
+    inset 0 0 3px 0 hsl(var(--glow-hsl) / 50%),
+    inset 0 0 6px 0 hsl(var(--glow-hsl) / 40%),
+    inset 0 0 15px 0 hsl(var(--glow-hsl) / 30%),
+    inset 0 0 25px 2px hsl(var(--glow-hsl) / 20%),
+    inset 0 0 50px 2px hsl(var(--glow-hsl) / 10%),
+    0 0 1px 0 hsl(var(--glow-hsl) / 60%),
+    0 0 3px 0 hsl(var(--glow-hsl) / 50%),
+    0 0 6px 0 hsl(var(--glow-hsl) / 40%),
+    0 0 15px 0 hsl(var(--glow-hsl) / 30%),
+    0 0 25px 2px hsl(var(--glow-hsl) / 20%),
+    0 0 50px 2px hsl(var(--glow-hsl) / 10%);
+}

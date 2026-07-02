@@ -1,30 +1,49 @@
-# Landing Page — Steffano Millones
+# FLUIA — Landing & Site
 
-Personal landing page built with vanilla HTML, CSS, and JavaScript.
+Official FLUIA website. Multi-page site built with **Astro**.
 
 ## Stack
 
-- HTML5
-- CSS3 (`styles/`)
-- JavaScript (`scripts/`)
-
-## Live
-
-https://landing-steffano-abp9j7i47-steffano-s-projects.vercel.app
+- [Astro 5](https://astro.build) — static site generator
+- [GSAP](https://gsap.com) — scroll & UI animation
+- [three.js](https://threejs.org) — hero WebGL
+- Fonts: **Fraunces** (headings), **Manrope** (body)
 
 ## Structure
 
 ```
-landing-steffano-final/
-├── index.html
-├── scripts/
-│   ├── main.js
-│   └── waves.js
-└── styles/
-    ├── main.css
-    └── waves.css
+├── astro.config.mjs
+├── vercel.json          # framework=astro, build → dist/
+├── public/              # static assets (logos, scripts) served as-is
+│   ├── assets/
+│   └── scripts/
+└── src/
+    ├── components/      # Nav, Footer, sections, etc.
+    ├── data/            # servicios.js (content source)
+    ├── layouts/         # Base.astro
+    ├── pages/           # index, servicios, casos, proceso, contacto
+    └── styles/          # base, sections, pages, glow-card
+```
+
+## Develop
+
+```bash
+npm install
+npm run dev       # local dev server
+npm run build     # production build → dist/
+npm run preview   # serve the built dist/ locally
 ```
 
 ## Deploy
 
-Vercel auto-deploys on every push to `main`.
+Vercel builds `astro build` on every push and serves `dist/`.
+
+| Branch    | Destination                                      |
+|-----------|--------------------------------------------------|
+| `main`    | Production → https://landing-steffano.vercel.app |
+| `develop` | Preview → temporary URL on each push             |
+
+## Git workflow
+
+Claude edits → `git add` + `git commit` → shows diff → Steffano approves with
+`"push"` / `"ok push"` / `"dale"` → only then Claude runs `git push`.

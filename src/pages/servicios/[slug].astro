@@ -1,0 +1,176 @@
+---
+import Base from '../../layouts/Base.astro';
+import CtaBanner from '../../components/CtaBanner.astro';
+import DashboardCompare from '../../components/DashboardCompare.astro';
+import AgentChat from '../../components/AgentChat.astro';
+import AutomationFlow from '../../components/AutomationFlow.astro';
+import WebShowcase from '../../components/WebShowcase.astro';
+import { servicios } from '../../data/servicios.js';
+
+export function getStaticPaths() {
+  return servicios.map((s) => ({ params: { slug: s.slug }, props: { servicio: s } }));
+}
+
+const { servicio } = Astro.props;
+const otros = servicios.filter((s) => s.slug !== servicio.slug);
+
+// Entregables: una lista de chips a partir del string separado por " + ".
+const entregables = servicio.entregable.split(/\s*\+\s*/).map((t) => t.trim()).filter(Boolean);
+// Perfiles: si la data no define perfiles, caemos a uno solo con el ícono del servicio.
+const perfiles = servicio.perfiles ?? [
+  { icon: servicio.icon, title: servicio.name, desc: servicio.para },
+];
+// Ícono por defecto para chips de entregables sin ícono propio (check).
+const chipFallbackIcon = '<path d="M20 6 9 17l-5-5"/>';
+---
+
+<Base
+  title={`${servicio.name} · FLUIA`}
+  description={servicio.positioning.slice(0, 155)}
+  path={`/servicios/${servicio.slug}`}
+>
+  <header class={`svc-hero${['agentes-ia', 'automatizacion', 'web-sistemas'].includes(servicio.slug) ? ' svc-hero--top' : ''}`} aria-labelledby="svc-hero-heading">
+    <div class="svc-hero-inner">
+      <div class="svc-hero-text">
+        <nav class="svc-breadcrumb" aria-label="Ruta de navegación">
+          <a href="/servicios">Servicios</a>
+          <span aria-hidden="true">/</span>
+          <span>{servicio.label}</span>
+        </nav>
+        <span class="section-label">
+          <span class="section-label-mark" aria-hidden="true"></span>
+          {servicio.cat}
+        </span>
+        <h1 class="hero-title svc-hero-title" id="svc-hero-heading">{servicio.title}</h1>
+        <p class="hero-sub svc-hero-sub">{servicio.positioning}</p>
+        <div class="hero-ctas">
+          <a href={`/contacto?servicio=${servicio.service}`} class="btn-primary">
+            {servicio.cta}
+            <span class="btn-arrow" aria-hidden="true">→</span>
+          </a>
+          <a href="/servicios" class="btn-secondary">Ver todos los servicios</a>
+        </div>
+
+        {servicio.metrics && (
+          <div class="hero-metrics">
+            {servicio.metrics.map((m) => (
+              <div class="hm-item">
+                <span class={`hm-value hm-value--${m.tone}`}>{m.value}</span>
+                <span class="hm-label">{m.label}</span>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+
+      <div class="svc-hero-visual">
+        {servicio.slug === 'dashboards' ? (
+          <DashboardCompare />
+        ) : servicio.slug === 'agentes-ia' ? (
+          <AgentChat />
+        ) : servicio.slug === 'automatizacion' ? (
+          <AutomationFlow />
+        ) : servicio.slug === 'web-sistemas' ? (
+          <WebShowcase />
+        ) : (
+          <div class="svc-hero-media" data-svc={servicio.slug} aria-hidden="true">
+            <span class="svc-hero-media-tag">{servicio.label}</span>
+          </div>
+        )}
+        {servicio.panelInvite && (
+          <p class="svc-hero-invite">{servicio.panelInvite}</p>
+        )}
+      </div>
+    </div>
+  </header>
+
+  <section class="page-section page-section--tight" aria-label={`Detalle de ${servicio.name}`}>
+    <div class="container">
+      <div class="sd-grid-2">
+
+        <!-- Para quién es -->
+        <div class="sd-card glow-card">
+          <span class="sd-tag">Para quién es</span>
+          <div class="sd-profiles">
+            {perfiles.map((p, i) => (
+              <div class={`sd-profile${i > 0 ? ' sd-profile--bordered' : ''}`}>
+                <div class="sd-icon-box">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" set:html={p.icon} />
+                </div>
+                <div>
+                  <h3 class="sd-profile-title">{p.title}</h3>
+                  <p class="sd-profile-desc">{p.desc}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <!-- Casos de uso típicos -->
+        <div class="sd-card glow-card">
+          <span class="sd-tag">Casos de uso típicos</span>
+          <div class="sd-pills">
+            {servicio.usos.map((u, i) => (
+              <button type="button" class={`sd-pill${i === 0 ? ' sd-pill--active' : ''}`}>
+                {servicio.usosIcons?.[i] && (
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" set:html={servicio.usosIcons[i]} />
+                )}
+                {u}
+              </button>
+            ))}
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Qué recibes + CTA -->
+      <div class="sd-card sd-card--wide glow-card">
+        <span class="sd-tag">Qué recibes</span>
+        <div class="sd-deliverables">
+          {entregables.map((e, i) => (
+            <div class="sd-chip">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" set:html={servicio.entregablesIcons?.[i] ?? chipFallbackIcon} />
+              <span>{e}</span>
+            </div>
+          ))}
+        </div>
+        <div class="sd-cta-row">
+          <p class="sd-cta-text">¿Encaja con lo que necesitas? Conversemos y lo aterrizamos.</p>
+          <a href={`/contacto?servicio=${servicio.service}`} class="sd-cta-btn">
+            {servicio.cta}
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="page-section" aria-labelledby="otros-heading">
+    <div class="container">
+      <h2 class="svc-otros-title" id="otros-heading">Otros servicios</h2>
+      <div class="svc-preview-grid svc-otros-grid">
+        {otros.map((s) => (
+          <a href={`/servicios/${s.slug}`} class="svc-preview-card glow-card">
+            <span class="svc-preview-cat">{s.cat}</span>
+            <span class="svc-preview-name">{s.name}</span>
+            <span class="svc-preview-hook">{s.hook}</span>
+            <span class="svc-preview-link">Ver servicio <span aria-hidden="true">→</span></span>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <CtaBanner />
+
+  <script is:inline>
+    document.querySelectorAll('.sd-pills').forEach((group) => {
+      group.querySelectorAll('.sd-pill').forEach((pill) => {
+        pill.addEventListener('click', () => {
+          group.querySelectorAll('.sd-pill').forEach((p) => p.classList.remove('sd-pill--active'));
+          pill.classList.add('sd-pill--active');
+        });
+      });
+    });
+  </script>
+</Base>

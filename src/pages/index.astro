@@ -1,0 +1,194 @@
+---
+import Base from '../layouts/Base.astro';
+import CtaBanner from '../components/CtaBanner.astro';
+import TechMarquee from '../components/TechMarquee.astro';
+
+const problemas = [
+  { name: 'Trabajo manual repetitivo', desc: 'El mismo reporte cada lunes, copiar y pegar sin fin. El Ctrl+C no es una estrategia.' },
+  { name: 'Herramientas desconectadas', desc: 'Sheets, correos y sistemas que no se hablan entre sí. Y nadie hace de traductor.' },
+  { name: 'Datos que no deciden', desc: 'Tienes la información; lo que no tienes es claridad para usarla.' },
+  { name: 'Seguimiento lento', desc: 'Tus leads se enfrían esperando respuesta. El que no contesta, pierde.' },
+  { name: 'IA sin rumbo', desc: 'Experimentos con IA que no resuelven nada operativo. Bots que solo saben decir “hola 👋”.' },
+  { name: 'Presencia digital débil', desc: 'Una web bonita que no genera ni confianza ni contactos.' },
+];
+
+const servicios = [
+  { id: 'dashboards', cat: 'Visualización de datos', name: 'Dashboards y visualización', hook: 'Para negocios que tienen datos pero no tienen claridad.' },
+  { id: 'automatizacion', cat: 'Automatización operativa', name: 'Automatización de procesos', hook: 'Para equipos que pierden horas en trabajo manual repetitivo.' },
+  { id: 'agentes-ia', cat: 'IA aplicada', name: 'Agentes IA para operación', hook: 'Asistentes que hacen trabajo operativo real, no chatbots genéricos.' },
+  { id: 'web-sistemas', cat: 'Presencia y sistemas', name: 'Websites y sistemas internos', hook: 'Interfaces conectadas a tus datos, formularios y automatizaciones.' },
+];
+
+const casos = [
+  { stat: '79 h', unit: '/ mes', title: 'Análisis de mercado: de 2 semanas a 1 hora', tag: 'Automatización' },
+  { stat: '30', unit: 'días', title: 'El dashboard se pagó solo en el primer mes', tag: 'Dashboard' },
+  { stat: '0 min', unit: '', title: 'Un asistente IA que coordina la agenda 24/7', tag: 'Agente IA' },
+];
+---
+
+<Base
+  title="FLUIA · Consultora Digital · Dashboards, Automatización y Agentes IA"
+  description="Automatizamos tus operaciones y convertimos tus datos en decisiones. Dashboards ejecutivos, automatización con n8n y agentes de IA para empresas y MYPEs en Perú y LATAM."
+  path="/"
+>
+  <!-- ── HERO ── -->
+  <section class="hero" id="inicio" aria-labelledby="hero-heading">
+    <div class="hero-inner">
+      <div class="hero-col-text">
+        <p class="hero-eyebrow">
+          <span class="eyebrow-dot" aria-hidden="true"></span>
+          Consultora digital · Perú &amp; LATAM
+        </p>
+        <h1 class="hero-title" id="hero-heading">
+          Menos trabajo manual.
+          <span class="hero-title-accent">Más decisiones con datos.</span>
+        </h1>
+        <p class="hero-sub">
+          Ordenamos tu caos digital, automatizamos lo repetitivo y conectamos tus herramientas
+          con IA. Tú decides; los datos opinan.
+        </p>
+        <div class="hero-ctas">
+          <a href="/contacto" class="btn-primary">
+            Agendar diagnóstico
+            <span class="btn-arrow" aria-hidden="true">→</span>
+          </a>
+          <a href="/servicios" class="btn-secondary">Ver servicios</a>
+        </div>
+      </div>
+
+      <div class="hero-col-visual" aria-hidden="true">
+        <div class="hero-brand">
+          <span class="hero-brand-glow"></span>
+          <img class="hero-brand-mark" src="/assets/fluia-mark.png" alt="" width="383" height="331" decoding="async" />
+          <img class="hero-brand-wordmark" src="/assets/fluia-wordmark.png" alt="" width="602" height="139" decoding="async" />
+          <p class="hero-brand-claim">
+            Menos trabajo manual.
+            <span>Más decisiones con datos.</span>
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── PROBLEMAS QUE RESOLVEMOS ── -->
+  <section class="problemas" aria-labelledby="problemas-heading">
+    <div class="container">
+      <header class="section-head">
+        <span class="section-label">
+          <span class="section-label-mark" aria-hidden="true"></span>
+          Problemas que resolvemos
+        </span>
+        <h2 class="section-title" id="problemas-heading">¿Te suena alguno de estos?</h2>
+      </header>
+
+      <div class="prob-grid">
+        {problemas.map((p) => (
+          <div class="prob-card glow-card">
+            <span class="prob-icon" aria-hidden="true">
+              <svg viewBox="0 0 16 16" fill="none"><path d="M8 1.5l6.5 11.3H1.5L8 1.5z" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/><path d="M8 6.2v3" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/><circle cx="8" cy="11.2" r="0.7" fill="currentColor"/></svg>
+            </span>
+            <h3 class="prob-name">{p.name}</h3>
+            <p class="prob-desc">{p.desc}</p>
+          </div>
+        ))}
+      </div>
+
+      <p class="prob-bridge">
+        ¿Te viste en más de uno? Tranquilo, para eso estamos los obsesivos del orden:
+        <strong>diseñamos una operación más limpia e inteligente</strong>, sin que tengas que saber
+        de antemano qué herramienta necesitas.
+      </p>
+    </div>
+  </section>
+
+  <!-- ── SERVICIOS PREVIEW ── -->
+  <section class="servicios" aria-labelledby="servicios-heading">
+    <div class="container">
+      <header class="section-head">
+        <span class="section-label">
+          <span class="section-label-mark" aria-hidden="true"></span>
+          Lo que hacemos
+        </span>
+        <h2 class="section-title" id="servicios-heading">Cuatro soluciones, un mismo objetivo.</h2>
+        <p class="section-sub">
+          Organizadas por el problema que resuelven, no por la herramienta que usan.
+        </p>
+      </header>
+
+      <div class="svc-preview-grid">
+        {servicios.map((s) => (
+          <a href={`/servicios/${s.id}`} class="svc-preview-card glow-card">
+            <span class="svc-preview-cat">{s.cat}</span>
+            <h3 class="svc-preview-name">{s.name}</h3>
+            <span class="svc-preview-hook">{s.hook}</span>
+            <span class="svc-preview-link">Ver servicio <span aria-hidden="true">→</span></span>
+          </a>
+        ))}
+      </div>
+
+      <div class="svc-diag-preview glow-card">
+        <div class="svc-diag-preview-text">
+          <span class="svc-preview-cat">Punto de partida</span>
+          <h3 class="svc-diag-preview-title">¿No sabes por dónde empezar?</h3>
+          <p class="svc-diag-preview-sub">
+            Diagnóstico digital y roadmap: revisamos tu operación y te decimos qué resolver
+            primero, con una ruta priorizada por impacto.
+          </p>
+        </div>
+        <a href="/servicios#diagnostico" class="btn-primary">
+          Conocer el diagnóstico
+          <span class="btn-arrow" aria-hidden="true">→</span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── CASOS PREVIEW ── -->
+  <section class="proyectos" aria-labelledby="casos-heading">
+    <div class="container">
+      <header class="section-head">
+        <span class="section-label">
+          <span class="section-label-mark" aria-hidden="true"></span>
+          Casos reales
+        </span>
+        <h2 class="section-title" id="casos-heading">Resultados, medidos en horas y dinero.</h2>
+      </header>
+
+      <div class="case-preview-grid">
+        {casos.map((c) => (
+          <a href="/casos" class="case-preview-card glow-card">
+            <span class="case-preview-stat">{c.stat}<small>{c.unit}</small></span>
+            <h3 class="case-preview-title">{c.title}</h3>
+            <span class="case-preview-tag">{c.tag}</span>
+          </a>
+        ))}
+      </div>
+
+      <div class="projects-bridge">
+        <p class="bridge-text">¿Tu empresa tiene un reto parecido?</p>
+        <a href="/casos" class="bridge-link">Ver todos los casos →</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── TECNOLOGÍAS ── -->
+  <section class="tecnologias" aria-labelledby="tech-heading">
+    <div class="container">
+      <header class="section-head">
+        <span class="section-label">
+          <span class="section-label-mark" aria-hidden="true"></span>
+          Stack técnico
+        </span>
+        <h2 class="section-title" id="tech-heading">Tecnologías con las que conectamos y construimos.</h2>
+      </header>
+
+      <TechMarquee />
+      <p class="tech-note">
+        Tú no eliges la herramienta, eliges el problema a resolver. Nosotros elegimos la tecnología
+        que mejor encaja con tu operación y tu presupuesto.
+      </p>
+    </div>
+  </section>
+
+  <CtaBanner />
+</Base>

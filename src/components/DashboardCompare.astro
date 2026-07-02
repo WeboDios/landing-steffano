@@ -1,0 +1,343 @@
+---
+// Slider de comparación "antes / después" para el hero de Dashboards.
+// Izquierda: datos en crudo (mock de hoja de cálculo). Derecha: dashboard FLUIA.
+// Interacción accesible vía <input type="range"> (drag, touch y teclado).
+
+const cols = ['A', 'B', 'C', 'D'];
+const fields = ['Fecha', 'Cliente', 'Monto', 'Estado'];
+const rows = [
+  ['12/04', 'Acme SAC', '1,240', 'Pagado'],
+  ['12/04', 'Beta EIRL', '980', 'Pendiente'],
+  ['13/04', 'Nova SRL', '2,310', 'Pagado'],
+  ['14/04', 'Lumen SA', '640', 'Vencido'],
+  ['14/04', 'Orbe SAC', '1,775', 'Pagado'],
+  ['15/04', 'Delta EIRL', '430', 'Pendiente'],
+  ['16/04', 'Praxis SA', '3,020', 'Pagado'],
+  ['16/04', 'Vértice', '1,120', 'Pendiente'],
+];
+---
+
+<figure class="cmp" data-cmp role="group" aria-label="Comparación de datos en crudo contra un dashboard de FLUIA">
+  <!-- DESPUÉS · Dashboard FLUIA (capa base) -->
+  <div class="cmp-pane cmp-after" aria-hidden="true">
+    <div class="db">
+      <header class="db-head">
+        <div class="db-head-titles">
+          <span class="db-kicker">Dashboard ejecutivo</span>
+          <span class="db-title">Ventas · Q2</span>
+        </div>
+        <span class="db-live"><span class="db-live-dot"></span>En vivo</span>
+      </header>
+
+      <div class="db-kpis">
+        <div class="db-kpi">
+          <span class="db-kpi-label">Ingresos</span>
+          <span class="db-kpi-num">S/ 11.5k</span>
+          <span class="db-kpi-up">▲ 18%</span>
+        </div>
+        <div class="db-kpi">
+          <span class="db-kpi-label">Cobrado</span>
+          <span class="db-kpi-num">82%</span>
+          <span class="db-kpi-up">▲ 9%</span>
+        </div>
+        <div class="db-kpi">
+          <span class="db-kpi-label">Vencidas</span>
+          <span class="db-kpi-num">3</span>
+          <span class="db-kpi-down">▼ 2</span>
+        </div>
+      </div>
+
+      <div class="db-chart">
+        <div class="db-chart-head">
+          <span class="db-chart-title">Ventas por semana</span>
+          <span class="db-chart-leg"><span class="db-leg-dot"></span>2024</span>
+        </div>
+        <svg class="db-svg" viewBox="0 0 300 110" preserveAspectRatio="none" aria-hidden="true">
+          <defs>
+            <linearGradient id="cmpArea" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="var(--primary)" stop-opacity="0.34"></stop>
+              <stop offset="100%" stop-color="var(--primary)" stop-opacity="0"></stop>
+            </linearGradient>
+          </defs>
+          <line class="db-grid" x1="0" y1="28" x2="300" y2="28"></line>
+          <line class="db-grid" x1="0" y1="56" x2="300" y2="56"></line>
+          <line class="db-grid" x1="0" y1="84" x2="300" y2="84"></line>
+          <path class="db-area" d="M0,86 L43,80 L86,84 L129,60 L172,56 L215,36 L258,32 L300,16 L300,110 L0,110 Z" fill="url(#cmpArea)"></path>
+          <polyline class="db-line" points="0,86 43,80 86,84 129,60 172,56 215,36 258,32 300,16"></polyline>
+        </svg>
+        <div class="db-bars">
+          <span style="--h:42%"></span><span style="--h:55%"></span><span style="--h:38%"></span>
+          <span style="--h:70%"></span><span style="--h:60%"></span><span style="--h:88%"></span>
+          <span style="--h:76%"></span><span style="--h:100%"></span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ANTES · Datos en crudo (capa recortada por el divisor) -->
+  <div class="cmp-pane cmp-before" aria-hidden="true">
+    <div class="xls">
+      <div class="xls-bar">
+        <span class="xls-tab">Hoja1</span>
+        <span class="xls-name">ventas_2024_final_v3.xlsx</span>
+      </div>
+      <table class="xls-grid">
+        <thead>
+          <tr>
+            <th class="xls-corner"></th>
+            {cols.map((c) => <th class="xls-colhead">{c}</th>)}
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="xls-fieldrow">
+            <td class="xls-rownum">1</td>
+            {fields.map((f) => <td class="xls-field">{f}</td>)}
+          </tr>
+          {rows.map((r, i) => (
+            <tr>
+              <td class="xls-rownum">{i + 2}</td>
+              {r.map((cell) => <td>{cell}</td>)}
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Etiquetas + divisor + control -->
+  <figcaption class="cmp-badge cmp-badge--before" aria-hidden="true">Antes · Excel</figcaption>
+  <figcaption class="cmp-badge cmp-badge--after" aria-hidden="true">Después · FLUIA</figcaption>
+
+  <div class="cmp-divider" aria-hidden="true">
+    <span class="cmp-handle">
+      <svg width="22" height="22" viewBox="0 0 22 22" fill="none" aria-hidden="true">
+        <path d="M8.5 7L5 11l3.5 4M13.5 7L17 11l-3.5 4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </span>
+  </div>
+
+  <input
+    class="cmp-range"
+    type="range"
+    min="0"
+    max="100"
+    value="50"
+    aria-label="Arrastra para comparar los datos en crudo con el dashboard de FLUIA"
+  />
+</figure>
+
+<style>
+  .cmp {
+    --pos: 50%;
+    position: relative;
+    margin: 0;
+    aspect-ratio: 4 / 3;
+    border-radius: var(--radius, 16px);
+    border: 1px solid var(--line-strong);
+    overflow: hidden;
+    isolation: isolate;
+    background: #0d0a1c;
+    user-select: none;
+    box-shadow: 0 30px 70px -34px rgba(0, 0, 0, 0.7);
+  }
+
+  .cmp-pane {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-items: stretch;
+  }
+  /* La capa "antes" se recorta desde la derecha según el divisor. */
+  .cmp-before {
+    z-index: 2;
+    clip-path: inset(0 calc(100% - var(--pos)) 0 0);
+  }
+  .cmp-after { z-index: 1; }
+
+  /* ── DESPUÉS · Dashboard ── */
+  .db {
+    width: 100%; height: 100%;
+    display: flex; flex-direction: column; gap: 0.55rem;
+    padding: clamp(0.7rem, 2.2vw, 1.1rem);
+    background:
+      radial-gradient(120% 90% at 78% 18%, var(--primary-glow), transparent 60%),
+      linear-gradient(180deg, rgba(24, 18, 48, 0.96), rgba(13, 10, 28, 0.96));
+  }
+  .db-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 0.5rem; }
+  .db-head-titles { display: flex; flex-direction: column; gap: 0.1rem; }
+  .db-kicker {
+    font-size: 0.54rem; text-transform: uppercase; letter-spacing: 0.16em;
+    color: var(--primary-soft); font-weight: 600;
+  }
+  .db-title { font-family: var(--serif); font-weight: 600; font-size: 0.95rem; color: var(--ink-100); }
+  .db-live {
+    display: inline-flex; align-items: center; gap: 0.32rem;
+    font-family: var(--mono); font-size: 0.54rem; letter-spacing: 0.04em; color: var(--ink-80);
+    padding: 0.2rem 0.5rem; border: 1px solid var(--line); border-radius: 999px; white-space: nowrap;
+  }
+  .db-live-dot { width: 6px; height: 6px; border-radius: 50%; background: #5fd6a0; box-shadow: 0 0 8px #5fd6a0; }
+
+  .db-kpis { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.4rem; }
+  .db-kpi {
+    display: flex; flex-direction: column; gap: 0.12rem;
+    padding: 0.45rem 0.5rem;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid var(--line);
+    border-radius: var(--r-md, 10px);
+  }
+  .db-kpi-label { font-size: 0.5rem; color: var(--ink-60); letter-spacing: 0.02em; }
+  .db-kpi-num { font-family: var(--serif); font-weight: 600; font-size: 0.95rem; line-height: 1; color: var(--ink-100); }
+  .db-kpi-up { font-family: var(--mono); font-size: 0.5rem; color: #5fd6a0; }
+  .db-kpi-down { font-family: var(--mono); font-size: 0.5rem; color: var(--accent-soft, #f08ab0); }
+
+  .db-chart {
+    flex: 1; min-height: 0;
+    display: flex; flex-direction: column; gap: 0.3rem;
+    padding: 0.5rem 0.55rem;
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid var(--line);
+    border-radius: var(--r-md, 10px);
+  }
+  .db-chart-head { display: flex; align-items: center; justify-content: space-between; }
+  .db-chart-title { font-size: 0.56rem; color: var(--ink-80); font-weight: 500; }
+  .db-chart-leg { display: inline-flex; align-items: center; gap: 0.28rem; font-size: 0.5rem; color: var(--ink-40); }
+  .db-leg-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--primary); }
+  .db-svg { width: 100%; height: 38%; min-height: 34px; display: block; overflow: visible; }
+  .db-grid { stroke: rgba(255, 255, 255, 0.06); stroke-width: 1; }
+  .db-area { stroke: none; }
+  .db-line {
+    fill: none; stroke: var(--primary); stroke-width: 2;
+    stroke-linecap: round; stroke-linejoin: round; vector-effect: non-scaling-stroke;
+    filter: drop-shadow(0 2px 6px var(--primary-glow));
+  }
+  .db-bars { flex: 1; min-height: 0; display: flex; align-items: flex-end; gap: 0.28rem; }
+  .db-bars span {
+    flex: 1; height: var(--h);
+    border-radius: 3px 3px 0 0;
+    background: linear-gradient(180deg, var(--primary), rgba(167, 107, 255, 0.25));
+    box-shadow: 0 0 10px -2px var(--primary-glow);
+  }
+
+  /* ── ANTES · Hoja de cálculo ── */
+  .xls {
+    width: 100%; height: 100%;
+    display: flex; flex-direction: column;
+    background: #eef0f3;
+    font-family: var(--mono);
+  }
+  .xls-bar {
+    display: flex; align-items: center; gap: 0.5rem;
+    padding: 0.3rem 0.55rem;
+    background: #1f6f43;
+    color: #eafff3;
+    font-size: 0.55rem; letter-spacing: 0.02em;
+  }
+  .xls-tab {
+    background: #eef0f3; color: #1f6f43; font-weight: 600;
+    padding: 0.1rem 0.45rem; border-radius: 3px 3px 0 0;
+  }
+  .xls-name { opacity: 0.85; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .xls-grid {
+    flex: 1; width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;
+    font-size: 0.52rem;
+    color: #39414d;
+  }
+  .xls-grid th, .xls-grid td {
+    border: 1px solid #cdd2da;
+    padding: 0.16rem 0.34rem;
+    text-align: left;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .xls-corner, .xls-colhead, .xls-rownum {
+    background: #dde1e7; color: #6b7280;
+    text-align: center; font-weight: 600;
+  }
+  .xls-corner, .xls-rownum { width: 1.4rem; }
+  .xls-fieldrow td:not(.xls-rownum) { background: #e6e9ee; font-weight: 600; color: #2b3038; }
+
+  /* ── Etiquetas ── */
+  .cmp-badge {
+    position: absolute; top: 0.7rem; z-index: 4;
+    font-family: var(--mono);
+    font-size: 0.56rem; letter-spacing: 0.04em;
+    padding: 0.26rem 0.6rem;
+    border-radius: 999px;
+    backdrop-filter: blur(6px);
+    pointer-events: none;
+  }
+  .cmp-badge--before {
+    left: 0.7rem;
+    color: #2b3038;
+    background: rgba(255, 255, 255, 0.78);
+    border: 1px solid rgba(0, 0, 0, 0.08);
+  }
+  .cmp-badge--after {
+    right: 0.7rem;
+    color: var(--ink-100);
+    background: rgba(16, 12, 30, 0.6);
+    border: 1px solid var(--line-strong);
+  }
+
+  /* ── Divisor + handle ── */
+  .cmp-divider {
+    position: absolute; top: 0; bottom: 0;
+    left: var(--pos);
+    width: 2px; margin-left: -1px;
+    z-index: 5;
+    background: linear-gradient(180deg, transparent, rgba(255, 255, 255, 0.9), transparent);
+    box-shadow: 0 0 16px rgba(167, 107, 255, 0.7);
+    pointer-events: none;
+  }
+  .cmp-handle {
+    position: absolute; top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    width: 38px; height: 38px;
+    display: grid; place-items: center;
+    color: #fff;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--primary), var(--accent, #f08ab0));
+    border: 2px solid rgba(255, 255, 255, 0.85);
+    box-shadow: 0 6px 18px -4px rgba(0, 0, 0, 0.6), 0 0 0 6px rgba(167, 107, 255, 0.18);
+  }
+
+  /* Control: range invisible que cubre todo el área (drag/touch/teclado). */
+  .cmp-range {
+    position: absolute; inset: 0; z-index: 6;
+    width: 100%; height: 100%; margin: 0;
+    opacity: 0; cursor: ew-resize;
+    -webkit-appearance: none; appearance: none; background: transparent;
+  }
+  .cmp-range::-webkit-slider-thumb {
+    -webkit-appearance: none; appearance: none;
+    width: 44px; height: 100%; cursor: ew-resize;
+  }
+  .cmp-range::-moz-range-thumb {
+    width: 44px; height: 100%; border: none; background: transparent; cursor: ew-resize;
+  }
+  .cmp-range:focus-visible { outline: none; }
+  .cmp-range:focus-visible ~ .cmp-divider .cmp-handle {
+    box-shadow: 0 6px 18px -4px rgba(0, 0, 0, 0.6), 0 0 0 4px var(--primary-soft);
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .cmp-handle { animation: cmpNudge 3.6s ease-in-out infinite; }
+    @keyframes cmpNudge {
+      0%, 92%, 100% { transform: translate(-50%, -50%) scale(1); }
+      96% { transform: translate(-50%, -50%) scale(1.1); }
+    }
+  }
+</style>
+
+<script>
+  document.querySelectorAll<HTMLElement>('[data-cmp]').forEach((cmp) => {
+    const range = cmp.querySelector('.cmp-range') as HTMLInputElement | null;
+    if (!range) return;
+    const apply = () => cmp.style.setProperty('--pos', `${range.value}%`);
+    range.addEventListener('input', apply);
+    apply();
+  });
+</script>

@@ -1,0 +1,352 @@
+---
+// Chat de ejemplo para el hero de Agentes IA.
+// Una persona le pide al agente que agende una reunión y el agente ejecuta
+// acciones reales (revisa calendario, crea el evento, envía la invitación).
+// Se auto-reproduce; respeta prefers-reduced-motion (muestra todo estático).
+
+// Guion del chat. type: 'user' | 'agent' | 'action'
+const script = [
+  { type: 'user', text: 'Agéndame una reunión con el equipo de marketing para revisar la campaña.' },
+  { type: 'agent', text: 'Claro. Reviso la disponibilidad de los 4 integrantes esta semana…' },
+  { type: 'action', tool: 'Google Calendar', label: 'Buscando un horario libre en común', doneLabel: 'Horario en común encontrado' },
+  { type: 'agent', text: 'El jueves 18 a las 3:00 p. m. todos están libres. ¿Lo confirmo?' },
+  { type: 'user', text: 'Sí, perfecto. Que dure 45 minutos.' },
+  { type: 'agent', text: 'Hecho. Creé el evento y envié las invitaciones con la agenda. ✅' },
+  {
+    type: 'card',
+    title: 'Revisión de campaña Q2',
+    when: 'Jue 18 jun · 3:00–3:45 p. m.',
+    who: '4 invitados · Google Meet',
+  },
+];
+---
+
+<figure class="ac" data-ac role="group" aria-label="Ejemplo de conversación con un agente de IA de FLUIA">
+  <header class="ac-bar" aria-hidden="true">
+    <span class="ac-avatar">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+        <path d="M12 3v3M5 9h14a2 2 0 0 1 2 2v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-6a2 2 0 0 1 2-2Z" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+        <circle cx="8.5" cy="13.5" r="1.2" fill="currentColor"/>
+        <circle cx="15.5" cy="13.5" r="1.2" fill="currentColor"/>
+      </svg>
+    </span>
+    <span class="ac-bar-titles">
+      <span class="ac-bar-name">Agente FLUIA</span>
+      <span class="ac-bar-status"><span class="ac-status-dot"></span>Activo · conectado a tus herramientas</span>
+    </span>
+    <button class="ac-replay" type="button" aria-label="Repetir la conversación" data-ac-replay>
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+        <path d="M3 12a9 9 0 1 0 2.6-6.3M3 4v4h4" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </button>
+  </header>
+
+  <div class="ac-stream" data-ac-stream role="log" aria-live="polite">
+    {script.map((m, i) => (
+      <div class={`ac-item ac-item--${m.type}`} data-ac-item data-i={i}>
+        {m.type === 'action' && (
+          <div class="ac-action">
+            <span class="ac-action-spin" aria-hidden="true"></span>
+            <span class="ac-action-check" aria-hidden="true">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none">
+                <path d="M20 6 9 17l-5-5" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </span>
+            <span class="ac-action-text ac-action-text--loading">{m.label} · <strong>{m.tool}</strong></span>
+            <span class="ac-action-text ac-action-text--done">{m.doneLabel} · <strong>{m.tool}</strong></span>
+          </div>
+        )}
+        {m.type === 'card' && (
+          <div class="ac-card">
+            <span class="ac-card-ico" aria-hidden="true">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+                <rect x="3" y="5" width="18" height="16" rx="2.5" stroke="currentColor" stroke-width="1.6"/>
+                <path d="M3 9h18M8 3v4M16 3v4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+                <path d="M8.5 15.5l2.2 2.2 4.3-4.3" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </span>
+            <span class="ac-card-body">
+              <span class="ac-card-title">{m.title}</span>
+              <span class="ac-card-when">{m.when}</span>
+              <span class="ac-card-who">{m.who}</span>
+            </span>
+            <span class="ac-card-tag">Creado</span>
+          </div>
+        )}
+        {(m.type === 'user' || m.type === 'agent') && (
+          <div class="ac-bubble">{m.text}</div>
+        )}
+      </div>
+    ))}
+
+    <div class="ac-item ac-item--agent ac-typing" data-ac-typing hidden>
+      <div class="ac-bubble ac-bubble--typing" aria-hidden="true">
+        <span></span><span></span><span></span>
+      </div>
+    </div>
+  </div>
+</figure>
+
+<style>
+  .ac {
+    position: relative;
+    margin: 0;
+    /* el alto se ajusta al contenido (último mensaje); tope de seguridad en pantallas bajas */
+    max-height: min(82vh, 620px);
+    display: flex;
+    flex-direction: column;
+    border-radius: var(--radius, 16px);
+    border: 1px solid var(--line-strong);
+    overflow: hidden;
+    isolation: isolate;
+    background:
+      radial-gradient(120% 80% at 80% 0%, var(--primary-glow), transparent 58%),
+      linear-gradient(180deg, rgba(22, 16, 44, 0.96), rgba(12, 9, 26, 0.97));
+    box-shadow: 0 30px 70px -34px rgba(0, 0, 0, 0.7);
+  }
+
+  /* ── Barra superior ── */
+  .ac-bar {
+    display: flex; align-items: center; gap: 0.6rem;
+    padding: 0.7rem 0.85rem;
+    border-bottom: 1px solid var(--line);
+    background: rgba(255, 255, 255, 0.02);
+  }
+  .ac-avatar {
+    flex: none; display: grid; place-items: center;
+    width: 30px; height: 30px; border-radius: 50%;
+    color: #fff;
+    background: linear-gradient(135deg, var(--primary), var(--accent, #f08ab0));
+    box-shadow: 0 0 0 4px rgba(167, 107, 255, 0.16);
+  }
+  .ac-bar-titles { display: flex; flex-direction: column; gap: 0.08rem; margin-right: auto; }
+  .ac-bar-name { font-family: var(--serif); font-weight: 600; font-size: 0.84rem; color: var(--ink-100); }
+  .ac-bar-status {
+    display: inline-flex; align-items: center; gap: 0.32rem;
+    font-size: 0.58rem; color: var(--ink-60); letter-spacing: 0.01em;
+  }
+  .ac-status-dot { width: 6px; height: 6px; border-radius: 50%; background: #5fd6a0; box-shadow: 0 0 8px #5fd6a0; }
+  .ac-replay {
+    flex: none; display: grid; place-items: center;
+    width: 28px; height: 28px; border-radius: 50%;
+    color: var(--ink-60); cursor: pointer;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid var(--line);
+    transition: color 0.2s, border-color 0.2s, transform 0.2s;
+  }
+  .ac-replay:hover { color: var(--ink-100); border-color: var(--line-strong); transform: rotate(-30deg); }
+  .ac-replay:focus-visible { outline: 2px solid var(--primary-soft); outline-offset: 2px; }
+
+  /* ── Stream de mensajes ── */
+  .ac-stream {
+    position: relative;
+    flex: 1; min-height: 0;
+    display: flex; flex-direction: column; gap: 0.6rem;
+    padding: 0.9rem;
+    overflow-y: auto;
+    overflow-x: hidden;
+    overscroll-behavior: contain;
+    scrollbar-width: thin;
+    scrollbar-color: var(--line-strong) transparent;
+  }
+  .ac-stream::-webkit-scrollbar { width: 7px; }
+  .ac-stream::-webkit-scrollbar-track { background: transparent; }
+  .ac-stream::-webkit-scrollbar-thumb {
+    background: var(--line-strong);
+    border-radius: 999px;
+    border: 2px solid transparent;
+    background-clip: padding-box;
+  }
+  .ac-stream::-webkit-scrollbar-thumb:hover { background: var(--primary-soft); background-clip: padding-box; }
+  .ac-item {
+    display: flex;
+    /* oculto por defecto; el JS revela cada uno */
+    opacity: 0; transform: translateY(8px);
+  }
+  .ac-item.is-in { opacity: 1; transform: none; transition: opacity 0.4s ease, transform 0.4s ease; }
+  .ac-item--user { justify-content: flex-end; }
+  .ac-item--agent { justify-content: flex-start; }
+  .ac-item--action, .ac-item--card { justify-content: center; }
+
+  .ac-bubble {
+    max-width: 80%;
+    padding: 0.58rem 0.78rem;
+    font-size: 0.84rem; line-height: 1.4;
+    border-radius: 15px;
+  }
+  .ac-item--user .ac-bubble {
+    color: #fff;
+    background: linear-gradient(135deg, var(--primary), #8a5bff);
+    border-bottom-right-radius: 5px;
+    box-shadow: 0 6px 16px -6px var(--primary-glow);
+  }
+  .ac-item--agent .ac-bubble {
+    color: var(--ink-100);
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--line);
+    border-bottom-left-radius: 5px;
+  }
+
+  /* ── Acción del agente (usando herramienta) ── */
+  .ac-action {
+    display: inline-flex; align-items: center; gap: 0.45rem;
+    padding: 0.34rem 0.7rem;
+    font-family: var(--mono); font-size: 0.6rem; letter-spacing: 0.01em;
+    color: var(--ink-80);
+    background: rgba(167, 107, 255, 0.08);
+    border: 1px solid var(--line-strong);
+    border-radius: 999px;
+    transition: background 0.3s ease, border-color 0.3s ease, color 0.3s ease;
+  }
+  .ac-action-text strong { color: var(--primary-soft); font-weight: 600; }
+  .ac-action-spin {
+    width: 11px; height: 11px; flex: none;
+    border-radius: 50%;
+    border: 2px solid rgba(167, 107, 255, 0.3);
+    border-top-color: var(--primary-soft);
+    animation: acSpin 0.7s linear infinite;
+  }
+  @keyframes acSpin { to { transform: rotate(360deg); } }
+
+  /* Estado completado: check verde y texto "listo" */
+  .ac-action-check { display: none; flex: none; color: #5fd6a0; line-height: 0; }
+  .ac-action-text--done { display: none; }
+  .ac-action.is-done {
+    color: var(--ink-100);
+    background: rgba(95, 214, 160, 0.10);
+    border-color: rgba(95, 214, 160, 0.32);
+  }
+  .ac-action.is-done .ac-action-spin,
+  .ac-action.is-done .ac-action-text--loading { display: none; }
+  .ac-action.is-done .ac-action-check { display: inline-flex; }
+  .ac-action.is-done .ac-action-text--done { display: inline; }
+  .ac-action.is-done .ac-action-text strong { color: #8fe3bd; }
+
+  /* ── Tarjeta de evento creado ── */
+  .ac-card {
+    display: flex; align-items: center; gap: 0.6rem;
+    width: 100%;
+    padding: 0.6rem 0.7rem;
+    background: linear-gradient(135deg, rgba(167, 107, 255, 0.14), rgba(240, 138, 176, 0.08));
+    border: 1px solid var(--line-strong);
+    border-radius: var(--r-md, 12px);
+    box-shadow: 0 0 0 1px rgba(167, 107, 255, 0.08) inset;
+  }
+  .ac-card-ico {
+    flex: none; display: grid; place-items: center;
+    width: 34px; height: 34px; border-radius: 9px;
+    color: #fff;
+    background: linear-gradient(135deg, var(--primary), var(--accent, #f08ab0));
+  }
+  .ac-card-body { display: flex; flex-direction: column; gap: 0.08rem; margin-right: auto; min-width: 0; }
+  .ac-card-title { font-family: var(--serif); font-weight: 600; font-size: 0.8rem; color: var(--ink-100); }
+  .ac-card-when { font-size: 0.64rem; color: var(--ink-80); }
+  .ac-card-who { font-size: 0.6rem; color: var(--ink-60); }
+  .ac-card-tag {
+    flex: none;
+    font-family: var(--mono); font-size: 0.52rem; letter-spacing: 0.04em;
+    color: #5fd6a0;
+    padding: 0.2rem 0.45rem;
+    border: 1px solid rgba(95, 214, 160, 0.35);
+    border-radius: 999px;
+  }
+
+  /* ── Indicador "escribiendo" ── */
+  /* fuera del flujo: el indicador no altera el alto de la caja */
+  .ac-typing { position: absolute; left: 0.9rem; bottom: 0.9rem; margin: 0; }
+  .ac-typing[hidden] { display: none; }
+  .ac-bubble--typing { display: inline-flex; gap: 4px; padding: 0.6rem 0.7rem; }
+  .ac-bubble--typing span {
+    width: 6px; height: 6px; border-radius: 50%;
+    background: var(--ink-60);
+    animation: acDot 1.2s ease-in-out infinite;
+  }
+  .ac-bubble--typing span:nth-child(2) { animation-delay: 0.18s; }
+  .ac-bubble--typing span:nth-child(3) { animation-delay: 0.36s; }
+  @keyframes acDot {
+    0%, 60%, 100% { opacity: 0.3; transform: translateY(0); }
+    30% { opacity: 1; transform: translateY(-3px); }
+  }
+
+  /* Sin animación: mostrar todo de una. */
+  @media (prefers-reduced-motion: reduce) {
+    .ac-item { opacity: 1; transform: none; }
+    .ac-action-spin { animation: none; }
+    .ac-bubble--typing span { animation: none; }
+    .ac-typing { display: none !important; }
+  }
+</style>
+
+<script>
+  const PREFERS_REDUCED = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  document.querySelectorAll<HTMLElement>('[data-ac]').forEach((ac) => {
+    const stream = ac.querySelector('[data-ac-stream]') as HTMLElement | null;
+    const typing = ac.querySelector('[data-ac-typing]') as HTMLElement | null;
+    const replay = ac.querySelector('[data-ac-replay]') as HTMLButtonElement | null;
+    const items = Array.from(ac.querySelectorAll<HTMLElement>('[data-ac-item]'));
+    if (!stream || !items.length) return;
+
+    let timers: number[] = [];
+    const clear = () => { timers.forEach((t) => clearTimeout(t)); timers = []; };
+    const wait = (ms: number) => new Promise<void>((r) => timers.push(window.setTimeout(r, ms)));
+
+    const reset = () => {
+      clear();
+      items.forEach((el) => el.classList.remove('is-in'));
+      ac.querySelectorAll('.ac-action').forEach((a) => a.classList.remove('is-done'));
+      if (typing) typing.hidden = true;
+    };
+
+    // Ritmo de aparición según el tipo de mensaje.
+    const delayFor = (el: HTMLElement) => {
+      if (el.classList.contains('ac-item--user')) return 900;
+      if (el.classList.contains('ac-item--action')) return 1100;
+      if (el.classList.contains('ac-item--card')) return 600;
+      return 1200; // agente
+    };
+
+    const showTyping = (on: boolean) => {
+      if (!typing) return;
+      typing.hidden = !on;
+      if (on) stream.appendChild(typing); // mantener al final
+    };
+
+    const run = async () => {
+      reset();
+      if (PREFERS_REDUCED) {
+        items.forEach((el) => el.classList.add('is-in'));
+        ac.querySelectorAll('.ac-action').forEach((a) => a.classList.add('is-done'));
+        return;
+      }
+
+      const toBottom = () => { stream.scrollTop = stream.scrollHeight; };
+
+      await wait(450);
+      for (const el of items) {
+        const isAgent = el.classList.contains('ac-item--agent');
+        const isAction = el.classList.contains('ac-item--action');
+        if (isAgent) { showTyping(true); toBottom(); await wait(750); showTyping(false); }
+        el.classList.add('is-in');
+        toBottom();
+        if (isAction) {
+          // El agente "usa la herramienta": gira un momento, luego marca listo (check).
+          await wait(1100);
+          el.querySelector('.ac-action')?.classList.add('is-done');
+          await wait(700); // pausa antes de enviar el siguiente mensaje
+        } else {
+          await wait(delayFor(el));
+        }
+      }
+      toBottom();
+    };
+
+    replay?.addEventListener('click', () => { run(); });
+
+    // Arranca cuando entra en viewport.
+    const io = new IntersectionObserver((entries, obs) => {
+      entries.forEach((e) => { if (e.isIntersecting) { run(); obs.disconnect(); } });
+    }, { threshold: 0.4 });
+    io.observe(ac);
+  });
+</script>

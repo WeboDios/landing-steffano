@@ -1,0 +1,26 @@
+---
+interface Props {
+  title?: string;
+  sub?: string;
+}
+const {
+  title = '¿No sabes por dónde empezar? Empieza por un diagnóstico, nosotros ponemos el orden.',
+  sub = 'Revisamos tu operación, detectamos las tareas manuales que más te cuestan y te entregamos una ruta clara de qué automatizar primero. Sin humo, con números.',
+} = Astro.props;
+---
+
+<section class="cta-banner" aria-label="Llamado a la acción">
+  <div class="container">
+    <div class="cta-banner-inner">
+      <h2 class="cta-banner-title">{title}</h2>
+      <p class="cta-banner-sub">{sub}</p>
+      <div class="cta-banner-actions">
+        <a href="/contacto" class="btn-primary">
+          Agendar diagnóstico
+          <span class="btn-arrow" aria-hidden="true">→</span>
+        </a>
+        <a href="/servicios" class="btn-secondary">Ver servicios</a>
+      </div>
+    </div>
+  </div>
+</section>

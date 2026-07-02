@@ -1,0 +1,103 @@
+---
+import { servicios, diagnostico } from '../data/servicios.js';
+
+interface Props {
+  currentPath?: string;
+}
+const { currentPath = '/' } = Astro.props;
+
+const links = [
+  { href: '/', label: 'Inicio' },
+  { href: '/servicios', label: 'Servicios', menu: true },
+  { href: '/proceso', label: 'Proceso' },
+  { href: '/casos', label: 'Casos' },
+  { href: '/contacto', label: 'Contacto' },
+];
+
+const isActive = (href: string) =>
+  href === '/' ? currentPath === '/' : currentPath.startsWith(href);
+---
+
+<header class="nav" id="nav" role="banner">
+  <a href="/" class="nav-logo" aria-label="FLUIA, volver al inicio">
+    <span class="nav-logo-mark" aria-hidden="true"></span>
+    <img class="nav-logo-text" src="/assets/fluia-wordmark.png" alt="FLUIA" />
+  </a>
+  <button
+    class="nav-toggle"
+    id="navToggle"
+    type="button"
+    aria-label="Abrir menú"
+    aria-expanded="false"
+    aria-controls="navLinks"
+  >
+    <span class="nav-toggle-bar" aria-hidden="true"></span>
+    <span class="nav-toggle-bar" aria-hidden="true"></span>
+    <span class="nav-toggle-bar" aria-hidden="true"></span>
+  </button>
+  <nav class="nav-links" id="navLinks" aria-label="Navegación principal">
+    <div class="nav-pill">
+      {links.map((l) =>
+        l.menu ? (
+          <div class="nav-has-menu" data-nav-menu>
+            <a
+              href={l.href}
+              class={isActive(l.href) ? 'nav-menu-trigger is-active' : 'nav-menu-trigger'}
+              aria-current={isActive(l.href) ? 'page' : undefined}
+              aria-haspopup="true"
+              aria-expanded="false"
+            >
+              {l.label}
+              <svg class="nav-menu-caret" width="10" height="6" viewBox="0 0 10 6" fill="none" aria-hidden="true">
+                <path d="M1 1l4 4 4-4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" />
+              </svg>
+            </a>
+            <div class="nav-dropdown nav-mega" role="menu" aria-label="Servicios">
+              <div class="nav-mega-inner">
+                <div class="nav-mega-services">
+                  {servicios.map((s) => (
+                    <a href={`/servicios/${s.slug}`} class="svc" role="menuitem">
+                      <span class="ic" aria-hidden="true">
+                        <svg viewBox="0 0 24 24" set:html={s.icon ?? ''} />
+                      </span>
+                      <span class="svc-name">{s.name}</span>
+                      <span class="svc-hook">{s.hook}</span>
+                      <span class="svc-tag">{s.cat}</span>
+                    </a>
+                  ))}
+                </div>
+                <div class="nav-mega-feature">
+                  <span class="feat-eyebrow">¿No sabes por dónde empezar?</span>
+                  <span class="feat-title">{diagnostico.title}</span>
+                  <p class="feat-sub">
+                    Revisamos tu operación y te decimos exactamente qué resolver primero,
+                    con una ruta priorizada por impacto.
+                  </p>
+                  <a
+                    href={`/contacto?servicio=${diagnostico.service}`}
+                    class="feat-cta"
+                    role="menuitem"
+                  >
+                    {diagnostico.cta}
+                    <svg viewBox="0 0 24 24" aria-hidden="true">
+                      <path d="M5 12h14" />
+                      <path d="M13 6l6 6-6 6" />
+                    </svg>
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+        ) : (
+          <a
+            href={l.href}
+            class={isActive(l.href) ? 'is-active' : undefined}
+            aria-current={isActive(l.href) ? 'page' : undefined}
+          >
+            {l.label}
+          </a>
+        )
+      )}
+    </div>
+  </nav>
+</header>

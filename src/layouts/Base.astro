@@ -1,0 +1,119 @@
+---
+import Nav from '../components/Nav.astro';
+import Footer from '../components/Footer.astro';
+import Preloader from '../components/Preloader.astro';
+
+interface Props {
+  title: string;
+  description: string;
+  path?: string;
+}
+
+const { title, description, path = '/' } = Astro.props;
+const canonical = new URL(path, Astro.site).href;
+
+const jsonLd = JSON.stringify({
+  '@context': 'https://schema.org',
+  '@type': 'ProfessionalService',
+  name: 'FLUIA',
+  description:
+    'Consultora digital en Perú. Dashboards ejecutivos, automatización de procesos con n8n, agentes de IA y sistemas internos para empresas y MYPEs.',
+  url: Astro.site?.href,
+  areaServed: ['Perú', 'LATAM'],
+  email: 'steffanomillones@gmail.com',
+  sameAs: [],
+  serviceType: [
+    'Dashboards y visualización de datos',
+    'Automatización de procesos',
+    'Agentes de IA para operaciones',
+    'Websites y sistemas internos',
+    'Diagnóstico digital y roadmap de automatización',
+  ],
+});
+---
+
+<!DOCTYPE html>
+<html lang="es" data-theme="amatista">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{title}</title>
+  <meta name="description" content={description} />
+  <link rel="canonical" href={canonical} />
+
+  <meta property="og:title" content={title} />
+  <meta property="og:description" content={description} />
+  <meta property="og:url" content={canonical} />
+  <meta property="og:type" content="website" />
+  <meta property="og:image" content={new URL('/assets/fluia-lockup.png', Astro.site).href} />
+  <meta name="twitter:card" content="summary_large_image" />
+
+  <link rel="icon" type="image/png" href="/assets/fluia-mark.png" />
+  <link rel="apple-touch-icon" href="/assets/fluia-mark.png" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,600;12..96,700&family=Manrope:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap"
+    rel="stylesheet"
+  />
+
+  <script type="application/ld+json" set:html={jsonLd} />
+
+  <style is:global>
+    @import '../styles/base.css';
+    @import '../styles/sections.css';
+    @import '../styles/pages.css';
+    @import '../styles/glow-card.css';
+  </style>
+</head>
+<body>
+  <Preloader />
+
+  <a href="#main-content" class="skip-link">Saltar al contenido principal</a>
+
+  <div class="ambient" aria-hidden="true">
+    <canvas class="ambient-canvas" id="ambientCanvas"></canvas>
+    <div class="ambient-grid"></div>
+    <div class="ambient-vignette"></div>
+  </div>
+
+  <Nav currentPath={path} />
+
+  <main id="main-content">
+    <slot />
+  </main>
+
+  <Footer />
+
+  <script src="/scripts/waves.js" is:inline></script>
+  <script src="/scripts/main.js" is:inline></script>
+  <script>
+    // Glow direccional (.glow-card): sigue el cursor cerca de los bordes.
+    // Solo en dispositivos con hover y puntero fino; en táctil no hace nada.
+    if (window.matchMedia('(hover: hover) and (pointer: fine)').matches) {
+      document.querySelectorAll('.glow-card').forEach((card) => {
+        const light = document.createElement('span');
+        light.className = 'edge-light';
+        light.setAttribute('aria-hidden', 'true');
+        card.append(light);
+
+        card.addEventListener('pointermove', (e) => {
+          const r = card.getBoundingClientRect();
+          const cx = r.width / 2;
+          const cy = r.height / 2;
+          const dx = e.clientX - r.left - cx;
+          const dy = e.clientY - r.top - cy;
+          const kx = dx === 0 ? Infinity : cx / Math.abs(dx);
+          const ky = dy === 0 ? Infinity : cy / Math.abs(dy);
+          const edge = Math.min(Math.max(1 / Math.min(kx, ky), 0), 1);
+          let angle = (Math.atan2(dy, dx) * 180) / Math.PI + 90;
+          if (angle < 0) angle += 360;
+          (card as HTMLElement).style.setProperty('--edge-proximity', (edge * 100).toFixed(2));
+          (card as HTMLElement).style.setProperty('--cursor-angle', `${angle.toFixed(2)}deg`);
+        });
+      });
+    }
+  </script>
+</body>
+</html>

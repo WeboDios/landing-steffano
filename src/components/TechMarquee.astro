@@ -1,0 +1,137 @@
+---
+// Marquee infinito del stack técnico que reacciona a la velocidad del scroll.
+// Port a vanilla del componente ScrollVelocity (React Bits), sin dependencias:
+// un rAF mide la velocidad de scroll, la suaviza y multiplica la velocidad
+// base de cada fila; las filas alternan dirección y el scroll puede invertirlas.
+// Con prefers-reduced-motion o sin JS las filas quedan quietas.
+const rows = [
+  ['n8n', 'OpenAI', 'Claude', 'Airtable', 'Google Sheets', 'BigQuery', 'Looker Studio', 'Power BI'],
+  ['APIs REST', 'Gmail', 'Google Calendar', 'WhatsApp API', 'Webhooks', 'JavaScript', 'Python'],
+];
+const COPIES = 4;
+---
+
+<div class="tech-marquee">
+  <ul class="sr-only" aria-label="Herramientas y tecnologías">
+    {rows.flat().map((t) => <li>{t}</li>)}
+  </ul>
+
+  <div class="tm-rows" aria-hidden="true">
+    {rows.map((row) => (
+      <div class="tm-row">
+        <div class="tm-track">
+          {Array.from({ length: COPIES }).map(() => (
+            <span class="tm-copy">
+              {row.map((t) => <span class="tm-pill">{t}</span>)}
+            </span>
+          ))}
+        </div>
+      </div>
+    ))}
+  </div>
+</div>
+
+<style>
+  .tech-marquee { max-width: 100%; }
+
+  .sr-only {
+    position: absolute;
+    width: 1px; height: 1px;
+    padding: 0; margin: -1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+    border: 0;
+  }
+
+  .tm-rows { display: grid; gap: 0.85rem; }
+
+  .tm-row {
+    overflow: hidden;
+    -webkit-mask-image: linear-gradient(90deg, transparent, #000 10%, #000 90%, transparent);
+    mask-image: linear-gradient(90deg, transparent, #000 10%, #000 90%, transparent);
+  }
+
+  .tm-track {
+    display: flex;
+    width: max-content;
+    will-change: transform;
+  }
+
+  .tm-copy { display: flex; gap: 0.6rem; padding-right: 0.6rem; }
+
+  .tm-pill {
+    white-space: nowrap;
+    font-family: var(--mono); font-size: 0.82rem; letter-spacing: 0.01em;
+    color: var(--ink-80);
+    padding: 0.5rem 1rem;
+    background: rgba(255, 255, 255, 0.035);
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    transition: border-color 0.2s ease, color 0.2s ease, background 0.2s ease;
+  }
+  .tm-pill:hover {
+    color: var(--ink-100);
+    border-color: color-mix(in oklch, var(--primary) 38%, transparent);
+    background: color-mix(in oklch, var(--primary) 8%, transparent);
+  }
+</style>
+
+<script>
+  if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    const tracks = document.querySelectorAll<HTMLElement>('.tm-track');
+    const items: { track: HTMLElement; copy: HTMLElement; width: number; x: number; base: number; dir: number }[] = [];
+
+    tracks.forEach((track, i) => {
+      const copy = track.firstElementChild as HTMLElement | null;
+      if (!copy) return;
+      items.push({
+        track,
+        copy,
+        width: copy.offsetWidth,
+        x: 0,
+        base: (i % 2 === 0 ? -1 : 1) * 55, // px/s; filas alternas en sentido opuesto
+        dir: 1,
+      });
+    });
+
+    if (items.length) {
+      window.addEventListener('resize', () => {
+        for (const it of items) it.width = it.copy.offsetWidth;
+      });
+
+      const wrap = (min: number, max: number, v: number) => {
+        const range = max - min;
+        return ((((v - min) % range) + range) % range) + min;
+      };
+
+      let lastY = window.scrollY;
+      let lastT = performance.now();
+      let smooth = 0; // velocidad de scroll suavizada (px/s)
+
+      const frame = (t: number) => {
+        const dt = Math.min((t - lastT) / 1000, 0.05);
+        lastT = t;
+
+        if (dt > 0) {
+          const y = window.scrollY;
+          smooth += ((y - lastY) / dt - smooth) * Math.min(1, dt * 10);
+          lastY = y;
+          const factor = smooth / 200; // ~mapeo [0..1000] px/s → [0..5] del original
+
+          for (const it of items) {
+            if (!it.width) { it.width = it.copy.offsetWidth; continue; }
+            let move = it.dir * it.base * dt;
+            if (factor < 0) it.dir = -1;
+            else if (factor > 0) it.dir = 1;
+            move += it.dir * move * factor;
+            it.x = wrap(-it.width, 0, it.x + move);
+            it.track.style.transform = `translate3d(${it.x.toFixed(2)}px, 0, 0)`;
+          }
+        }
+        requestAnimationFrame(frame);
+      };
+      requestAnimationFrame(frame);
+    }
+  }
+</script>

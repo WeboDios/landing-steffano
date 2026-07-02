@@ -1,0 +1,661 @@
+---
+import Base from '../layouts/Base.astro';
+import CtaBanner from '../components/CtaBanner.astro';
+
+const pasos = [
+  {
+    num: '01',
+    name: 'Diagnóstico',
+    desc: 'Revisamos tu proceso, tus datos, tus herramientas y los principales cuellos de botella.',
+    deliver: 'Recibes: mapa del proceso y oportunidades priorizadas.',
+    icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="6"/><path d="m20 20-3.2-3.2"/></svg>',
+  },
+  {
+    num: '02',
+    name: 'Diseño de solución',
+    desc: 'Definimos la mejor estructura, herramientas, flujo de trabajo y resultado esperado.',
+    deliver: 'Recibes: arquitectura de la solución y alcance claro.',
+    icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="5" cy="6" r="2.2"/><circle cx="19" cy="7" r="2.2"/><circle cx="12" cy="18" r="2.2"/><path d="M7 6.6 16.8 6.9M6.4 8 11 16M16.9 8.6 12.8 16"/></svg>',
+  },
+  {
+    num: '03',
+    name: 'Prototipo',
+    desc: 'Construimos una versión pequeña y funcional antes de escalar, para validar con datos reales.',
+    deliver: 'Recibes: prototipo funcionando para probar.',
+    icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 20 7.5v9L12 21 4 16.5v-9z"/><path d="M12 12v9M4 7.5 12 12l8-4.5"/></svg>',
+  },
+  {
+    num: '04',
+    name: 'Construcción',
+    desc: 'Desarrollamos el dashboard, automatización, agente o sistema completo.',
+    deliver: 'Recibes: la solución integrada a tus herramientas.',
+    icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="m9 8-4 4 4 4M15 8l4 4-4 4"/></svg>',
+  },
+  {
+    num: '05',
+    name: 'Validación',
+    desc: 'Probamos casos límite, calidad de datos, manejo de errores y flujos de uso reales.',
+    deliver: 'Recibes: solución probada y ajustada contigo.',
+    icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 19 6v5c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6z"/><path d="m9 12 2 2 4-4"/></svg>',
+  },
+  {
+    num: '06',
+    name: 'Entrega y soporte',
+    desc: 'Documentamos la solución, capacitamos a tu equipo y dejamos todo operativo.',
+    deliver: 'Recibes: documentación, capacitación y handoff.',
+    icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M7 3h7l4 4v14H7z"/><path d="M14 3v4h4M10 13h6M10 17h6"/></svg>',
+  },
+];
+
+// ─────────────────────────────────────────────
+// Geometría del río
+// ─────────────────────────────────────────────
+// El SVG usa un viewBox de 100 x 1000.
+// El río empieza exactamente en el nodo 01
+// y termina exactamente en el nodo 06.
+const VB_H = 1000;
+const CX = 50;
+const AMP = 37;
+
+const N = pasos.length;
+const padY = VB_H / (2 * N);
+
+const nodeY = pasos.map((_, i) => {
+  return padY + (i * (VB_H - 2 * padY)) / (N - 1);
+});
+
+const sideOf = (i: number) => (i % 2 === 0 ? 1 : -1); // +1 derecha · -1 izquierda
+
+const nodeX = pasos.map((_, i) => {
+  return CX + sideOf(i) * AMP;
+});
+
+// Estos son los únicos puntos del path.
+// No hay punto extra arriba ni punto extra abajo.
+// Por eso el río empieza en 01 y termina en 06.
+const pts = pasos.map((_, i) => ({
+  x: nodeX[i],
+  y: nodeY[i],
+}));
+
+let riverPath = `M ${pts[0].x} ${pts[0].y.toFixed(1)}`;
+
+for (let i = 1; i < pts.length; i++) {
+  const a = pts[i - 1];
+  const b = pts[i];
+
+  // Controla la suavidad vertical de la curva.
+  const k = (b.y - a.y) * 0.5;
+
+  riverPath += ` C ${a.x} ${(a.y + k).toFixed(1)} ${b.x} ${(b.y - k).toFixed(1)} ${b.x} ${b.y.toFixed(1)}`;
+}
+
+// Posición exacta del brillo final sobre el nodo 06.
+const endX = nodeX[N - 1];
+const endY = ((nodeY[N - 1] / VB_H) * 100).toFixed(2);
+---
+
+<Base
+  title="Proceso · FLUIA · De diagnóstico a entrega en 6 pasos"
+  description="Cómo trabajamos: diagnóstico, diseño de solución, prototipo, construcción, validación y entrega con capacitación. Sabes qué pasa y qué recibes en cada etapa."
+  path="/proceso"
+>
+  <header class="page-header container">
+    <span class="section-label">
+      <span class="section-label-mark" aria-hidden="true"></span>
+      El proceso
+    </span>
+
+    <h1 class="page-title">Un proceso claro, de inicio a fin.</h1>
+
+    <p class="page-sub">
+      Seis pasos sin sorpresas. En cada etapa sabes exactamente qué hacemos y qué recibes,
+      empezando siempre por un prototipo pequeño antes de escalar.
+    </p>
+  </header>
+
+  <section class="river-proceso" aria-label="Pasos del proceso de trabajo">
+    <div class="container">
+      <div class="river-wrap" data-river>
+        <svg class="river-line" viewBox="0 0 100 1000" preserveAspectRatio="none" aria-hidden="true">
+          <defs>
+            <linearGradient id="riverGrad" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0" stop-color="var(--primary-soft)" />
+              <stop offset="0.5" stop-color="var(--primary)" />
+              <stop offset="1" stop-color="var(--primary-soft)" />
+            </linearGradient>
+          </defs>
+
+          <path class="rl-glow river-draw-path" d={riverPath} pathLength="1" />
+          <path class="rl-main river-draw-path" d={riverPath} pathLength="1" />
+        </svg>
+
+        <div class="river-nodes" aria-hidden="true">
+          {pasos.map((_, i) => (
+            <span
+              class={`river-node ${i === 0 ? 'river-node-start' : ''}`}
+              data-side={sideOf(i) === 1 ? 'right' : 'left'}
+              style={`top:${((nodeY[i] / VB_H) * 100).toFixed(2)}%;left:${nodeX[i]}%;--i:${i};`}
+            ></span>
+          ))}
+        </div>
+
+        <ol class="river">
+          {pasos.map((p, i) => (
+            <li
+              class="river-step"
+              data-side={sideOf(i) === 1 ? 'right' : 'left'}
+              style={`grid-row:${i + 1};--i:${i};`}
+            >
+              <span class="rc-ghost" aria-hidden="true">{p.num}</span>
+
+              <article class="river-card glow-card">
+                <div class="rc-head">
+                  <span class="rc-icon" aria-hidden="true" set:html={p.icon} />
+                  <h2 class="rc-name">{p.name}</h2>
+                </div>
+
+                <p class="rc-desc">{p.desc}</p>
+                <p class="rc-deliver">{p.deliver}</p>
+              </article>
+            </li>
+          ))}
+        </ol>
+
+        <div
+          class="river-end-layer"
+          style={`--end-x:${endX}%;--end-y:${endY}%;`}
+          aria-hidden="true"
+        >
+          <div class="river-end"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <CtaBanner
+    title="El primer paso es siempre el diagnóstico."
+    sub="No tienes que llegar sabiendo qué necesitas. Llega con tu problema, nosotros nos encargamos de traducirlo a una solución concreta."
+  />
+</Base>
+
+<style>
+  .river-proceso {
+    position: relative;
+    padding: clamp(2rem, 5vw, 3.5rem) 0 clamp(4rem, 9vw, 7rem);
+    overflow: visible;
+  }
+
+  .river-wrap {
+    position: relative;
+    max-width: 64rem;
+    margin: 0 auto;
+    --band: clamp(140px, 18vw, 240px);
+    overflow: visible;
+  }
+
+  /* ─────────────────────────────────────────────
+     Línea del río
+     ───────────────────────────────────────────── */
+  .river-line {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 50%;
+    width: var(--band);
+    height: 100%;
+    transform: translateX(-50%);
+    overflow: visible;
+    pointer-events: none;
+    z-index: 1;
+    filter:
+      drop-shadow(0 0 9px var(--primary-glow))
+      drop-shadow(0 0 22px var(--primary-glow));
+  }
+
+  .rl-glow {
+    fill: none;
+    stroke: var(--primary);
+    stroke-width: 12;
+    opacity: 0.3;
+
+    /*
+      Usamos round para que el río se vea orgánico.
+      Aunque sea round, el path termina en el nodo 06.
+      El pequeño redondeo queda cubierto visualmente por el nodo y el glow final.
+    */
+    stroke-linecap: round;
+  }
+
+  .rl-main {
+    fill: none;
+    stroke: url(#riverGrad);
+    stroke-width: 2;
+    stroke-linecap: round;
+  }
+
+  /* ─────────────────────────────────────────────
+     Nodos
+     ───────────────────────────────────────────── */
+  .river-nodes {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 50%;
+    width: var(--band);
+    transform: translateX(-50%);
+    z-index: 4;
+    pointer-events: none;
+  }
+
+  .river-node {
+    position: absolute;
+    transform: translate(-50%, -50%);
+    width: 15px;
+    height: 15px;
+    border-radius: 50%;
+    background: var(--bg-soft);
+    border: 2px solid var(--primary);
+    box-shadow:
+      0 0 0 5px color-mix(in oklch, var(--primary) 16%, transparent),
+      0 0 20px 4px var(--primary-glow);
+  }
+
+  .river-node::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    width: clamp(2rem, 6vw, 4.5rem);
+    border-top: 1px dashed color-mix(in oklch, var(--primary) 50%, transparent);
+  }
+
+  .river-node[data-side='right']::after {
+    left: 50%;
+  }
+
+  .river-node[data-side='left']::after {
+    right: 50%;
+  }
+
+  /* ─────────────────────────────────────────────
+     Grilla de cards
+     ───────────────────────────────────────────── */
+  .river {
+    position: relative;
+    z-index: 3;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    column-gap: calc(var(--band) + clamp(2rem, 5vw, 4rem));
+    grid-template-rows: repeat(6, 1fr);
+    height: clamp(72rem, 120vw, 88rem);
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .river-step {
+    position: relative;
+    display: grid;
+    align-self: center;
+  }
+
+  .river-step[data-side='left'] {
+    grid-column: 1;
+    justify-self: end;
+  }
+
+  .river-step[data-side='right'] {
+    grid-column: 2;
+    justify-self: start;
+  }
+
+  .river-card {
+    position: relative;
+    z-index: 1;
+    max-width: 26rem;
+    padding: 1.4rem 1.55rem 1.5rem;
+    background: color-mix(in oklch, var(--bg-soft) 78%, transparent);
+    border: 1px solid var(--line-strong);
+    border-radius: 22px;
+    backdrop-filter: blur(9px);
+    box-shadow: 0 22px 48px -30px rgba(0, 0, 0, 0.85);
+    transition:
+      border-color 0.3s ease,
+      transform 0.3s ease,
+      box-shadow 0.3s ease;
+  }
+
+  .river-step:hover .river-card {
+    border-color: color-mix(in oklch, var(--primary) 42%, transparent);
+    transform: translateY(-3px);
+    box-shadow: 0 26px 52px -28px rgba(0, 0, 0, 0.9);
+  }
+
+  .rc-ghost {
+    position: absolute;
+    top: 50%;
+    z-index: 0;
+    font-family: var(--serif);
+    font-weight: 700;
+    font-size: clamp(3.4rem, 5vw, 4.6rem);
+    line-height: 1;
+    color: color-mix(in oklch, var(--primary) 24%, transparent);
+    pointer-events: none;
+    user-select: none;
+  }
+
+  /*
+    Los números viven en el borde EXTERIOR de cada tarjeta
+    (lado opuesto al río) para no quedar encima de la animación.
+  */
+  .river-step[data-side='right'] .rc-ghost {
+    right: 0;
+    transform: translate(118%, -50%);
+  }
+
+  .river-step[data-side='left'] .rc-ghost {
+    left: 0;
+    transform: translate(-118%, -50%);
+  }
+
+  .rc-head {
+    display: flex;
+    align-items: center;
+    gap: 0.7rem;
+    margin-bottom: 0.6rem;
+  }
+
+  .rc-icon {
+    width: 38px;
+    height: 38px;
+    flex: 0 0 auto;
+    display: grid;
+    place-items: center;
+    border-radius: 11px;
+    color: var(--primary-soft);
+    background: color-mix(in oklch, var(--primary) 13%, transparent);
+    border: 1px solid color-mix(in oklch, var(--primary) 28%, transparent);
+  }
+
+  .rc-icon :global(svg) {
+    width: 20px;
+    height: 20px;
+  }
+
+  .rc-name {
+    font-family: var(--serif);
+    font-weight: 600;
+    font-size: 1.18rem;
+    color: var(--ink-100);
+    letter-spacing: -0.01em;
+    margin: 0;
+    line-height: 1.2;
+  }
+
+  .rc-desc {
+    font-size: 0.88rem;
+    color: var(--ink-60);
+    line-height: 1.55;
+    margin: 0;
+  }
+
+  .rc-deliver {
+    margin: 0.75rem 0 0;
+    font-size: 0.8rem;
+    color: var(--primary-soft);
+    line-height: 1.45;
+    padding-left: 1rem;
+    position: relative;
+  }
+
+  .rc-deliver::before {
+    content: '→';
+    position: absolute;
+    left: 0;
+    top: 0;
+    color: var(--ink-40);
+  }
+
+  /* ─────────────────────────────────────────────
+     Cierre luminoso en el punto 06
+     ───────────────────────────────────────────── */
+  .river-end-layer {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 50%;
+    width: var(--band);
+    transform: translateX(-50%);
+    z-index: 0;
+    pointer-events: none;
+  }
+
+  .river-end {
+    position: absolute;
+    left: var(--end-x);
+    top: var(--end-y);
+    transform: translate(-50%, -50%);
+    width: 170px;
+    height: 170px;
+    pointer-events: none;
+  }
+
+  .river-end::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    background: radial-gradient(circle, var(--primary-glow), transparent 60%);
+    filter: blur(9px);
+    opacity: 0.95;
+  }
+
+  .river-end::after {
+    content: '';
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: var(--primary-soft);
+    box-shadow: 0 0 18px 4px var(--primary-glow);
+  }
+
+  /* ─────────────────────────────────────────────
+     Animación de entrada corregida
+     ───────────────────────────────────────────── */
+  @media (prefers-reduced-motion: no-preference) {
+    .river-draw-path {
+      /*
+        Como ahora los paths tienen pathLength="1",
+        el navegador entiende que TODO el río mide 1.
+
+        Entonces:
+        stroke-dashoffset: 1 = río oculto
+        stroke-dashoffset: 0 = río completo visible
+
+        Esto evita que se corte en el 04 por cálculos raros
+        de getTotalLength() en un SVG escalado.
+      */
+      stroke-dasharray: 1;
+      stroke-dashoffset: 1;
+      transition: stroke-dashoffset 2.6s ease;
+      visibility: visible;
+    }
+
+    .is-drawn .river-draw-path {
+      stroke-dashoffset: 0;
+    }
+
+    .river-node {
+      opacity: 0;
+      transform: translate(-50%, -50%) scale(0.4);
+      transition:
+        opacity 0.5s ease,
+        transform 0.5s ease;
+    }
+
+    .is-drawn .river-node {
+      opacity: 1;
+      transform: translate(-50%, -50%) scale(1);
+      transition-delay: calc(var(--i) * 0.32s + 0.25s);
+    }
+
+    .river-step {
+      opacity: 0;
+      transform: translateY(20px);
+      transition:
+        opacity 0.6s ease,
+        transform 0.6s ease;
+    }
+
+    .is-drawn .river-step {
+      opacity: 1;
+      transform: none;
+      transition-delay: calc(var(--i) * 0.32s + 0.3s);
+    }
+
+    .river-end-layer {
+      opacity: 0;
+      transition: opacity 0.8s ease;
+    }
+
+    .is-drawn .river-end-layer {
+      opacity: 1;
+      transition-delay: 2.6s;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .river-draw-path {
+      stroke-dasharray: none;
+      stroke-dashoffset: 0;
+    }
+
+    .river-node,
+    .river-step,
+    .river-end-layer {
+      opacity: 1;
+      transform: none;
+    }
+  }
+
+  /* ─────────────────────────────────────────────
+     Móvil / tablet
+     ───────────────────────────────────────────── */
+  @media (max-width: 900px) {
+    .river-line,
+    .river-nodes,
+    .river-end-layer {
+      display: none;
+    }
+
+    .river {
+      display: flex;
+      flex-direction: column;
+      gap: 2.2rem;
+      height: auto;
+      padding-left: 1.9rem;
+    }
+
+    .river::before {
+      content: '';
+      position: absolute;
+      left: 6px;
+      top: 0.4rem;
+      bottom: 0.4rem;
+      width: 2px;
+      background: linear-gradient(
+        var(--primary),
+        color-mix(in oklch, var(--primary) 28%, transparent)
+      );
+      box-shadow: 0 0 14px var(--primary-glow);
+    }
+
+    .river-step,
+    .river-step[data-side='left'],
+    .river-step[data-side='right'] {
+      grid-column: auto;
+      grid-row: auto !important;
+      justify-self: stretch;
+      align-self: stretch;
+      display: block;
+      position: relative;
+    }
+
+    .river-card {
+      max-width: none;
+    }
+
+    .rc-ghost,
+    .river-step[data-side='left'] .rc-ghost,
+    .river-step[data-side='right'] .rc-ghost {
+      top: 0.5rem;
+      right: 1rem;
+      left: auto;
+      transform: none;
+      font-size: 3rem;
+    }
+
+    .river-step::before {
+      content: '';
+      position: absolute;
+      left: -1.55rem;
+      top: 1.45rem;
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: var(--bg-soft);
+      border: 2px solid var(--primary);
+      box-shadow: 0 0 0 4px color-mix(in oklch, var(--primary) 14%, transparent);
+    }
+  }
+</style>
+
+<script>
+  const PREFERS_REDUCED = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const wrap = document.querySelector('[data-river]');
+
+  if (wrap) {
+    let animationStarted = false;
+
+    const drawRiver = () => {
+      if (animationStarted) return;
+
+      animationStarted = true;
+
+      /*
+        El scroll solo dispara la animación.
+        El recorrido real siempre lo controla el path:
+        01 → 02 → 03 → 04 → 05 → 06
+      */
+      wrap.classList.add('is-drawn');
+    };
+
+    if (PREFERS_REDUCED) {
+      wrap.classList.add('is-drawn');
+    } else {
+      const io = new IntersectionObserver(
+        (entries, obs) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              drawRiver();
+              obs.disconnect();
+            }
+          });
+        },
+        {
+          /*
+            Con 0.05 se dispara apenas la sección aparece.
+            Puedes subirlo a 0.15 si quieres que espere un poco más.
+          */
+          threshold: 0.05,
+        }
+      );
+
+      io.observe(wrap);
+    }
+  }
+</script>
