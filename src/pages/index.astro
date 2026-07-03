@@ -117,7 +117,7 @@ const casos = [
 
       <div class="svc-preview-grid">
         {servicios.map((s) => (
-          <a href={`/servicios/${s.id}`} class="svc-preview-card glow-card">
+          <a href={`/servicios/${s.slug}`} class="svc-preview-card glow-card">
             <span class="svc-preview-cat">{s.cat}</span>
             <h3 class="svc-preview-name">{s.name}</h3>
             <span class="svc-preview-hook">{s.hook}</span>

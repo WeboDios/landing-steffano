@@ -477,7 +477,6 @@
     radial-gradient(ellipse 70% 90% at 50% 0%, color-mix(in oklch, var(--primary) 14%, transparent), transparent 70%),
     linear-gradient(180deg, rgba(22,15,46,0.55), rgba(13,10,28,0.4));
   backdrop-filter: blur(12px);
-  overflow: hidden;
 }
 .cta-banner-title {
   font-family: var(--serif); font-weight: 600; letter-spacing: -0.02em;
